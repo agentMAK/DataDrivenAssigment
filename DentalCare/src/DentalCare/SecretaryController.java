@@ -228,6 +228,8 @@ public class SecretaryController extends javax.swing.JFrame {
     }//GEN-LAST:event_newPatientMenuActionPerformed
 
     private void calendarMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calendarMenuActionPerformed
+        CardLayout cl = (CardLayout)(mainPanel.getLayout());
+        cl.show(mainPanel, "newPatient" );
         // Get list of appointments for both Dentist and Hygienist
         //dentistCalendar.addAppointmentArray(dentistAppointments)
         //hygienistCalendar.addAppointmentArray(hygienistAppointments)
