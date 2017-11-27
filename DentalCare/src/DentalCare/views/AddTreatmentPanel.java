@@ -9,6 +9,7 @@ import DentalCare.model.Appointment;
 import DentalCare.model.Partner;
 import DentalCare.model.Patient;
 import DentalCare.model.Treatment;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 
 /**
@@ -169,7 +170,7 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
             selectedPatientIndex = 0;
         
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            Appointment lastAppointment = currentPatients[selectedPatientIndex].lastAppointment(currentPartner);
+            Appointment lastAppointment = getCurrentPatients()[selectedPatientIndex].lastAppointment(currentPartner);
             if(lastAppointment != null) {
                 updateLastConsultationField(lastAppointment);
                 updateTreatmentFields(lastAppointment.getTreatment());
@@ -207,6 +208,10 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
     
     final private Treatment[] listOfTreatments = {HYGIENE,CHECKUP,SILVERFILLING,WHITEFILLING,GOLDCROWN};
     
+    public void addAdd_RemoveActionListener(ActionListener add, ActionListener remove) {
+        addTreatmentCombo.addActionListener(add);
+        removeTreatmentCombo.addActionListener(remove);
+    }
     
     public void updatePatientNames(Patient[] patients,Partner partner) {
         currentPatients = patients;
@@ -272,7 +277,7 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
     /**
      * @return the addTreatmentCombo
      */
-    public Treatment getAddTreatmentCombo() {
+    public Treatment getTreatmentCombo() {
         return listOfTreatments[addTreatmentCombo.getSelectedIndex()];
     }
 
@@ -289,6 +294,13 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
         treatmentListLabel.setText("");
         patientNameCombo.removeAllItems();
         lastConsulationDateLabel.setText("");
+    }
+
+    /**
+     * @return the currentPatients
+     */
+    public Patient getCurrentPatient() {
+        return currentPatients[patientNameCombo.getSelectedIndex()];
     }
     
 }

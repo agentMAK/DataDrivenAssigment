@@ -305,8 +305,21 @@ public class PartnerController extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
                     }
                 });
+                
     }
     
+    private void addDentistTreatmentPanelListener() {
+                
+                addTreatmentDentist.addAdd_RemoveActionListener((ActionEvent e) -> {
+                    // Add treatment to appointment 
+                }, (ActionEvent e) -> {
+                    // Get list of appointments for Dentist with changed week
+                    //dentistCalendar.addAppointmentArray(dentistAppointments)
+                    currentWeek.plusDays(7);
+                });
+                 
+            }
+
     private Patient[] patientExamples = new Patient[2];
     private Patient patient1 = examplePatient("max");
     private Patient patient2 = examplePatient("Martin");
