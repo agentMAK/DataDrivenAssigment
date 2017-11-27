@@ -5,22 +5,33 @@
  */
 package DentalCare.model;
 
+import java.time.Duration;
+
 /**
  *
  * @author Martin
  */
 public class Treatment {
+
+    /**
+     * @return the duration
+     */
+    public long getDurationSeconds() {
+        return duration.getSeconds();
+    }
     
     //Instances
     private String name;
     private int cost;
+    private final Duration duration;
 
     
     //Constructor
     
-    public Treatment(String name, int cost) {
+    public Treatment(String name, int cost,int durationMinutes) {
         this.name = name;
         this.cost = cost;
+        this.duration = Duration.ofMinutes(durationMinutes);
     }
     /**
      * @return the name

@@ -5,6 +5,8 @@
  */
 package DentalCare.model;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author Martin
@@ -13,13 +15,21 @@ public class HealthCarePlan {
     
     //Instances
     private String name;
+    private int costMonthly;
+    private LocalDate startDate;
     private int hygieneVisits;
     private int checkUpVisits;
     private int repairs;
     
     
-    public HealthCarePlan(String name) {
+    public HealthCarePlan(String name, LocalDate startDate, int hygiene, int checkUpVisits, int repairs, int costMonthly ) {
         this.name = name;
+        this.startDate = startDate;
+        this.hygieneVisits = hygieneVisits;
+        this.checkUpVisits = checkUpVisits;
+        this.repairs = repairs;
+        this.costMonthly = costMonthly;
+                
     }
 
     /**
@@ -76,5 +86,19 @@ public class HealthCarePlan {
      */
     public void setRepairs(int repairs) {
         this.repairs = repairs;
+    }
+
+    /**
+     * @return the startDate
+     */
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    /**
+     * @param startDate the startDate to set
+     */
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 }

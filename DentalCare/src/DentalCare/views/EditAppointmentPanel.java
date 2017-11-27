@@ -5,23 +5,22 @@
  */
 package DentalCare.views;
 
-import java.time.LocalDateTime;
+import DentalCare.model.Partner;
 import java.time.LocalTime;
 import DentalCare.model.Patient;
 import DentalCare.model.Treatment;
 import java.time.LocalDate;
-import javax.swing.JList;
 
 /**
  *
  * @author Martin
  */
-public class BookAppointmentPanel extends javax.swing.JPanel {
+public class EditAppointmentPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form bookAppointment
      */
-    public BookAppointmentPanel() {
+    public EditAppointmentPanel() {
         initComponents();
     }
 
@@ -38,11 +37,11 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
         dateLabel = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        partner = new javax.swing.JComboBox<>();
+        partnerCombo = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        treatments = new javax.swing.JList<>();
+        treatmentsCombo = new javax.swing.JList<>();
         save = new javax.swing.JButton();
         patientName = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
@@ -55,34 +54,34 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        dateLabel.setText("Date");
         dateLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        dateLabel.setText("Date");
 
-        jLabel2.setText("Patient Name");
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("Patient Name");
 
-        jLabel3.setText("Partner");
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Partner");
 
-        partner.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dentist", "Hygienist" }));
-        partner.addActionListener(new java.awt.event.ActionListener() {
+        partnerCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dentist", "Hygienist" }));
+        partnerCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                partnerActionPerformed(evt);
+                partnerComboActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Custom End Time");
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel4.setText("Custom End Time");
 
-        jLabel5.setText("Treatment");
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel5.setText("Treatment");
 
-        treatments.setModel(new javax.swing.AbstractListModel<String>() {
+        treatmentsCombo.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Hygiene", "Check-up", "Silver amalgam filling", "White composite resin filling", "Gold Crown", "None" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(treatments);
+        jScrollPane1.setViewportView(treatmentsCombo);
 
         save.setText("Book Appointment");
         save.addActionListener(new java.awt.event.ActionListener() {
@@ -115,7 +114,7 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(partner, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(partnerCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                             .addComponent(patientName, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -138,7 +137,7 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(partner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(partnerCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dateLabel)
@@ -169,9 +168,9 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_saveActionPerformed
 
-    private void partnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partnerActionPerformed
+    private void partnerComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partnerComboActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_partnerActionPerformed
+    }//GEN-LAST:event_partnerComboActionPerformed
     
     public void addSaveActionListener(java.awt.event.ActionListener l) {
         save.addActionListener(l);
@@ -190,7 +189,6 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
     
     public void clearPatientName() {
         patientName.removeAllItems();
-        patientName.addItem("None");
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.github.lgooddatepicker.components.DatePicker date;
@@ -204,18 +202,18 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel mainPanel;
-    private javax.swing.JComboBox<String> partner;
+    private javax.swing.JComboBox<String> partnerCombo;
     private javax.swing.JComboBox<String> patientName;
     private javax.swing.JButton save;
     private com.github.lgooddatepicker.components.TimePicker startTime;
-    private javax.swing.JList<String> treatments;
+    private javax.swing.JList<String> treatmentsCombo;
     // End of variables declaration//GEN-END:variables
 
     //More variables
     private Patient[] currentPatients;
     
-    final private Treatment HYGIENE = new Treatment("hygiene",45,20);
-    final private Treatment CHECKUP = new Treatment("Check - UP",45,20);
+    final private Treatment HYGIENE = new Treatment("Hygiene",45,20);
+    final private Treatment CHECKUP = new Treatment("Check - Up",45,20);
     final private Treatment SILVERFILLING = new Treatment("Silver amalgam filling",90,60);
     final private Treatment WHITEFILLING = new Treatment("White composite resin filling",150,60);
     final private Treatment GOLDCROWN = new Treatment("Gold crown",500,60);
@@ -232,17 +230,14 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
      * @return the partner
      */
     public String getPartner() {
-        return (String)partner.getSelectedItem();
+        return (String)partnerCombo.getSelectedItem();
     }
 
     /**
      * @return the patientName
      */
     public Patient getPatient() {
-        if(patientName.getSelectedIndex() == 0)
-            return null;
-        else 
-            return currentPatients[patientName.getSelectedIndex() - 1];
+        return currentPatients[patientName.getSelectedIndex() -1];
     }
 
     /**
@@ -256,7 +251,7 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
      * @return the treatments
      */
     public Treatment[] getTreatments() {
-        int[] treatmentIndices = treatments.getSelectedIndices();
+        int[] treatmentIndices = treatmentsCombo.getSelectedIndices();
         Treatment[] treatmentList = new Treatment[treatmentIndices.length];
         for(int i : treatmentIndices) {
             //treatmentList[i] = listOfTreatments[i];
@@ -269,9 +264,8 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
         startTime.clear();
         endTime.clear();
         patientName.removeAllItems();
-        patientName.addItem("None");
-        partner.setSelectedIndex(0);  
-        treatments.setSelectedIndex(0);  
+        partnerCombo.setSelectedIndex(0);  
+        treatmentsCombo.setSelectedIndex(0);  
         
     }
 
@@ -280,6 +274,70 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
      */
     public LocalDate getDate() {
         return date.getDate();
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(LocalDate date) {
+        this.date.setDate(date);
+    }
+
+    /**
+     * @param endTime the endTime to set
+     */
+    public void setEndTime(LocalTime endTime) {
+        this.endTime.setTime(endTime);
+    }
+
+    /**
+     * @param partner the partner to set
+     */
+    public void setPartner(Partner partner) {
+        switch(partner) {
+            case DENTIST: partnerCombo.setSelectedIndex(0);
+                break;
+            case HYGIENIST: partnerCombo.setSelectedIndex(0);
+                break;
+        }
+    }
+
+    /**
+     * @param patientName the patientName to set
+     */
+    public void setPatients(Patient[] patients) {
+        this.currentPatients = patients;
+    }
+
+    /**
+     * @param startTime the startTime to set
+     */
+    public void setStartTime(LocalTime startTime) {
+        this.startTime.setTime(startTime);
+    }
+
+    /**
+     * @param treatments the treatments to set
+     */
+    public void setTreatment(Treatment[] treatments) {
+        int[] treatmentIndices = new int[treatments.length];
+        for(int i=0; i<treatments.length; i++) {
+            
+            switch(treatments[i].getName()) {
+                case "Hygiene": treatmentIndices[i] = 1;
+                    break;
+                case "Check - Up": treatmentIndices[i] = 2;
+                    break;
+                case "Silver amalgam filling": treatmentIndices[i] = 3;
+                    break;
+                case "White composite resin filling": treatmentIndices[i] = 4;
+                    break;
+                case "Gold crown": treatmentIndices[i] = 5;
+                    break;
+            }
+        }
+        
+        treatmentsCombo.setSelectedIndices(treatmentIndices);
     }
     
 }
