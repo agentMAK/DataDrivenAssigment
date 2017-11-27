@@ -8,17 +8,19 @@ package DentalCare.views;
 import java.awt.event.ActionListener;
 import DentalCare.model.Appointment;
 import DentalCare.model.Patient;
+import java.awt.event.ItemEvent;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Martin
  */
-public class cancelAppointmentPanel extends javax.swing.JPanel {
+public class CancelAppointmentPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form cancelAppointment
      */
-    public cancelAppointmentPanel() {
+    public CancelAppointmentPanel() {
         initComponents();
     }
 
@@ -42,6 +44,11 @@ public class cancelAppointmentPanel extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Appointments");
 
+        appointmentComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                appointmentComboBoxItemStateChanged(evt);
+            }
+        });
         appointmentComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 appointmentComboBoxActionPerformed(evt);
@@ -57,6 +64,12 @@ public class cancelAppointmentPanel extends javax.swing.JPanel {
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Patient");
+
+        patientName.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                patientNameItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -98,6 +111,20 @@ public class cancelAppointmentPanel extends javax.swing.JPanel {
     private void appointmentComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_appointmentComboBoxActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_appointmentComboBoxActionPerformed
+
+    private void appointmentComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_appointmentComboBoxItemStateChanged
+
+    }//GEN-LAST:event_appointmentComboBoxItemStateChanged
+
+    private void patientNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_patientNameItemStateChanged
+        
+        int currentSelectedPatient = appointmentComboBox.getSelectedIndex();
+        if(currentSelectedPatient<0)
+            currentSelectedPatient = 0;
+        
+        if (evt.getStateChange() == ItemEvent.SELECTED)
+            updateAppointments(currentPatients[currentSelectedPatient].getAllAppointments());
+    }//GEN-LAST:event_patientNameItemStateChanged
     
     private Appointment[] currentAppointments;
     private Patient[] currentPatients;
@@ -106,27 +133,32 @@ public class cancelAppointmentPanel extends javax.swing.JPanel {
         currentPatients = patients;
         
         for (Patient p: currentPatients) {
-            patientName.addItem(p.getForename());
+            patientName.addItem(p.getForename()+" "+p.getSurname());
         }
-        
-        updateAppointments(currentPatients[0].getAllAppointments());
+                //updateAppointments(currentPatients[0].getAllAppointments());
+
+    }
+    
+    public void updateAppointments(Appointment[] appointments){
+        currentAppointments = appointments;
+        try {
+            for (Appointment app: currentAppointments) {
+                if(!app.hasPassed())
+                    appointmentComboBox.addItem(app.getStartTime().toString());
+            }
+        }catch(NullPointerException el) {
+            JOptionPane.showMessageDialog(null, "No appointment found for current patient","Search", JOptionPane.ERROR_MESSAGE);
+        }
         this.revalidate();
         this.repaint();
     }
     
-    public void updateAppointments(Appointment[] appointments) {
-        currentAppointments = appointments;
-        for (Appointment app: currentAppointments) {
-            if(!app.hasPassed())
-                appointmentComboBox.addItem(app.getStartTime().toString());
-        }
-        this.revalidate();
-        this.repaint();
-    }
+    //Add item changed that links to updateAppointments
+    
     
     public void clearAll() {
         patientName.removeAllItems();
-        getAppointmentComboBox().removeAllItems();
+        appointmentComboBox.removeAllItems();
     }
     
     public void addCancelListener(ActionListener c) {
