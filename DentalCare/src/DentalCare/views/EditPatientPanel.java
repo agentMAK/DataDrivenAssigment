@@ -8,6 +8,7 @@ package DentalCare.views;
 import DentalCare.model.HealthCarePlan;
 import DentalCare.model.Patient;
 import com.github.lgooddatepicker.components.DatePicker;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.time.LocalDate;
 
@@ -58,7 +59,7 @@ public class EditPatientPanel extends javax.swing.JPanel {
         houseNumber = new javax.swing.JTextField();
         districtLabel = new javax.swing.JTextField();
         district = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        deletePatient = new javax.swing.JButton();
         contactNumberLabel1 = new javax.swing.JLabel();
         healthPlanStartDate = new com.github.lgooddatepicker.components.DatePicker();
         unsubscribe = new javax.swing.JCheckBox();
@@ -71,8 +72,8 @@ public class EditPatientPanel extends javax.swing.JPanel {
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        titleLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         titleLabel.setText("Title");
+        titleLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         titleCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mr", "Miss", "Mrs", "Dr" }));
         titleCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -81,17 +82,17 @@ public class EditPatientPanel extends javax.swing.JPanel {
             }
         });
 
-        forenameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         forenameLabel.setText("Forname");
+        forenameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        surnameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         surnameLabel.setText("Surname");
+        surnameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        dateOfBirthLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         dateOfBirthLabel.setText("Date of Birth");
+        dateOfBirthLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        houseNumberLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         houseNumberLabel.setText("House Number");
+        houseNumberLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         street.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -99,11 +100,11 @@ public class EditPatientPanel extends javax.swing.JPanel {
             }
         });
 
-        cityLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cityLabel.setText("City");
+        cityLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        postCodeLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         postCodeLabel.setText("Post Code");
+        postCodeLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         postCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,40 +112,40 @@ public class EditPatientPanel extends javax.swing.JPanel {
             }
         });
 
-        contactNumberLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         contactNumberLabel.setText("Contact Number");
+        contactNumberLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        HealthPlanLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         HealthPlanLabel.setText("Health Plan");
+        HealthPlanLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         save.setText("Save");
 
-        streetLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         streetLabel1.setText("Street");
+        streetLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        districtLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         districtLabel.setText("District");
         districtLabel.setBorder(null);
+        districtLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         districtLabel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 districtLabelActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Delete Patient");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        deletePatient.setText("Delete Patient");
+        deletePatient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                deletePatientActionPerformed(evt);
             }
         });
 
-        contactNumberLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         contactNumberLabel1.setText("Health Plan Start Date");
+        contactNumberLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         unsubscribe.setText("Unsubscribe");
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel1.setText("Select Patient");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         patientPicker.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -165,7 +166,7 @@ public class EditPatientPanel extends javax.swing.JPanel {
                 .addGap(57, 57, 57)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(deletePatient)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(save))
                     .addGroup(mainPanelLayout.createSequentialGroup()
@@ -262,7 +263,7 @@ public class EditPatientPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(save)
-                    .addComponent(jButton2))
+                    .addComponent(deletePatient))
                 .addContainerGap(105, Short.MAX_VALUE))
         );
 
@@ -285,9 +286,9 @@ public class EditPatientPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_districtLabelActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void deletePatientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePatientActionPerformed
+
+    }//GEN-LAST:event_deletePatientActionPerformed
 
     private void patientPickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_patientPickerActionPerformed
         // TODO add your handling code here:
@@ -313,6 +314,7 @@ public class EditPatientPanel extends javax.swing.JPanel {
     private javax.swing.JLabel contactNumberLabel1;
     private com.github.lgooddatepicker.components.DatePicker dateOfBirth;
     private javax.swing.JLabel dateOfBirthLabel;
+    private javax.swing.JButton deletePatient;
     private javax.swing.JTextField district;
     private javax.swing.JTextField districtLabel;
     private javax.swing.JTextField forename;
@@ -322,7 +324,6 @@ public class EditPatientPanel extends javax.swing.JPanel {
     private javax.swing.JTextField houseNumber;
     private javax.swing.JLabel houseNumberLabel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JComboBox<String> patientPicker;
@@ -339,8 +340,9 @@ public class EditPatientPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     //ActionListener to allow impliementation in secretaryController
-    public void addSaveActionListener(java.awt.event.ActionListener l) {
-        save.addActionListener(l);
+    public void addSave_DeleteActionListener(ActionListener saveA, ActionListener delete) {
+        save.addActionListener(saveA);
+        deletePatient.addActionListener(delete);
     }
     
     // More Variables
@@ -356,6 +358,7 @@ public class EditPatientPanel extends javax.swing.JPanel {
     private Patient[] currentPatients;
     
     public void clearAll() {
+        patientPicker.removeAllItems();
         forename.setText("");
         surname.setText("");
         dateOfBirth.clear();
@@ -472,18 +475,24 @@ public class EditPatientPanel extends javax.swing.JPanel {
     public int getHouseNumber() {
         return Integer.parseInt(houseNumber.getText());
     }
+    
+    public Patient getCurrentPatient() {
+        return currentPatients[patientPicker.getSelectedIndex()];
+    }
 
     /**
      * @param healthPlan the healthPlan to set
      */
     public void setHealthPlan(HealthCarePlan healthPlan) {
              healthPlanCombo.removeAllItems();
-            if(healthPlan == null)
+            if(healthPlan == null) {
                     healthPlanCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "NHS Free Plan", "Maintenance Plan", "Oral Health Plan" }));
-            else {
+                    unsubscribe.setVisible(false);
+            } else {
                 healthPlanCombo.addItem(healthPlan.getName());
                 healthPlanStartDate.setDate(healthPlan.getStartDate());
                 currentPlan = healthPlan;
+                unsubscribe.setVisible(true);
             }
             
             

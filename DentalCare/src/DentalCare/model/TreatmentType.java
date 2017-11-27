@@ -9,13 +9,11 @@ package DentalCare.model;
  *
  * @author Martin
  */
-public enum DentalJob {
-    DENTIST, HYGIENIST;
+public enum TreatmentType {CHECKUP, HYGIENE, REPAIR,COSMETIC;
     
     @Override
-    public String toString() {
-        return name().substring(0, 1) + name().substring(1).toLowerCase();
-    }
-
+            public String toString() {
+                return name().substring(0, 1) + name().substring(1).toLowerCase();
+            }
     
 }

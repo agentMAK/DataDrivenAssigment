@@ -8,6 +8,7 @@ package DentalCare;
 import DentalCare.model.Address;
 import DentalCare.model.Appointment;
 import DentalCare.model.HealthCarePlan;
+import DentalCare.model.IncorrectInputException;
 import DentalCare.model.Partner;
 import DentalCare.model.Patient;
 import DentalCare.model.Treatment;
@@ -30,9 +31,11 @@ public class PartnerController extends javax.swing.JFrame {
      */
     public PartnerController() {
         initComponents();
+        combine();
         addDentistCalendarPanelListener();
         addHygienistCalendarPanelListener();
-        combine();
+        addDentistTreatmentPanelListener();
+        addHygienistTreatmentPanelListener();
         addSearchPanelListener();
     }
 
@@ -301,8 +304,10 @@ public class PartnerController extends javax.swing.JFrame {
                         
                         JOptionPane.showMessageDialog(null, "View results on patient dropbox","Search complete", JOptionPane.INFORMATION_MESSAGE);
                         
-                    }catch(NumberFormatException el) {
+                    }catch(NumberFormatException | ArrayIndexOutOfBoundsException el) {
                         JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                    }catch(java.lang.NullPointerException el) {
+                            JOptionPane.showMessageDialog(null, "No Results Found","Search", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
                 
@@ -310,13 +315,38 @@ public class PartnerController extends javax.swing.JFrame {
     
     private void addDentistTreatmentPanelListener() {
                 
-                addTreatmentDentist.addAdd_RemoveActionListener((ActionEvent e) -> {
-                    // Add treatment to appointment 
+                addTreatmentDentist.addAdd_Remove_UpdateActionListener((ActionEvent e) -> {
+                    Treatment treatment = addTreatmentDentist.getTreatmentCombo();
+                    Appointment appointment = addTreatmentDentist.getCurrentAppointment();
+                    // Add treatment to appointment
+                    
                 }, (ActionEvent e) -> {
-                    // Get list of appointments for Dentist with changed week
-                    //dentistCalendar.addAppointmentArray(dentistAppointments)
-                    currentWeek.plusDays(7);
-                });
+                    Treatment treatment = addTreatmentDentist.getTreatmentCombo();
+                    Appointment appointment = addTreatmentDentist.getCurrentAppointment();
+                    // Remove Treatment
+                    
+                }, (ActionEvent e) -> {
+                    Appointment appointment = addTreatmentDentist.getCurrentAppointment();
+                    // Update the appointment as completed
+                }); 
+            }
+    
+    private void addHygienistTreatmentPanelListener() {
+                
+                addTreatmentHygienist.addAdd_Remove_UpdateActionListener((ActionEvent e) -> {
+                    Treatment treatment = addTreatmentHygienist.getTreatmentCombo();
+                    Appointment appointment = addTreatmentHygienist.getCurrentAppointment();
+                    // Add treatment to appointment 
+                    
+                }, (ActionEvent e) -> {
+                    Treatment treatment = addTreatmentHygienist.getTreatmentCombo();
+                    Appointment appointment = addTreatmentHygienist.getCurrentAppointment();
+                    // Remove Treatment
+                    
+                }, (ActionEvent e) -> {
+                    Appointment appointment = addTreatmentDentist.getCurrentAppointment();
+                    // Update the appointment as completed
+                }); 
                  
             }
 
@@ -347,12 +377,12 @@ public class PartnerController extends javax.swing.JFrame {
             
             HealthCarePlan healthPlan = null;
             
-            Treatment[] treatments = null;
             
-            Appointment appointmentExamples = new Appointment(treatments, Partner.HYGIENIST, "Maxi", null, LocalTime.now(), null);
-            Appointment[] appointments = {appointmentExamples};
+           // Appointment appointmentExamples = new Appointment(treatments, Partner.HYGIENIST, "Maxi", null, LocalTime.now(), null);
+
+            Appointment[] appointments = null;
             
-            Patient patient = new Patient(title, forename, surname,address, dateOfBirth, contactNumber, healthPlan,treatments, appointments);
+            Patient patient = new Patient(title, forename, surname,address, dateOfBirth, contactNumber, healthPlan, appointments);
             
             return patient;
     }

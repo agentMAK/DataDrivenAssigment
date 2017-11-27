@@ -6,6 +6,7 @@
 package DentalCare.model;
 
 import java.time.Duration;
+import DentalCare.model.TreatmentType;
 
 /**
  *
@@ -24,14 +25,23 @@ public class Treatment {
     private String name;
     private int cost;
     private final Duration duration;
+    private boolean paid;
+    private TreatmentType type;
 
     
     //Constructor
     
-    public Treatment(String name, int cost,int durationMinutes) {
+    public Treatment(String name,TreatmentType type, int cost,int durationMinutes) {
         this.name = name;
         this.cost = cost;
+                this.type = type;
         this.duration = Duration.ofMinutes(durationMinutes);
+        this.paid = false;
+    }
+    
+    public Treatment(String name,TreatmentType type, int cost,int durationMinutes,boolean paid) {
+        this(name,type,cost,durationMinutes);
+        this.paid = paid;
     }
     /**
      * @return the name
@@ -59,6 +69,20 @@ public class Treatment {
      */
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    /**
+     * @return the paid
+     */
+    public boolean isPaid() {
+        return paid;
+    }
+
+    /**
+     * @return the type
+     */
+    public TreatmentType getType() {
+        return type;
     }
     
     
