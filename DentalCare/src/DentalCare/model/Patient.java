@@ -18,16 +18,18 @@ public class Patient {
     private String surname;
     private LocalDate dateOfBirth;
     private int contactNumber;
+    private Address address;
     private HealthCarePlan plan;
     private Treatment[] treatments;
     private Appointment[] appointments;
     
-    public Patient(String title, String forname, String surname, LocalDate dateOfBirth, int contactNumber, HealthCarePlan plan, Treatment[] treatments, Appointment[] appointments){
+    public Patient(String title, String forname, String surname, Address address, LocalDate dateOfBirth, int contactNumber, HealthCarePlan plan, Treatment[] treatments, Appointment[] appointments){
         this.title = title;
         this.forename = forname;
         this.surname = surname;
         this.dateOfBirth = dateOfBirth;
         this.contactNumber = contactNumber;
+        this.address = address;
         this.plan = plan;
         this.treatments = treatments;
         this.appointments = appointments;
@@ -91,7 +93,23 @@ public class Patient {
     public Appointment[] getAllAppointments() {
         return appointments;
     }
+
+    /**
+     * @return the address
+     */
+    public Address getAddress() {
+        return address;
+    }
     
-    
-    
+    // Appointment array must be in ascending order
+    public Appointment lastAppointment(Partner p) {
+        
+        for(int i=appointments.length-1; i >= 0; i--) {
+                if(appointments[i].getPartner() == p)
+                    return appointments[i]; 
+            }
+        
+        return null;
+        }
+
 }

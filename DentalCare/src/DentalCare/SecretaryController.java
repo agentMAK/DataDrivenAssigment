@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import DentalCare.model.Appointment;
 import DentalCare.model.Partner;
+import java.time.LocalTime;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,6 +31,13 @@ public class SecretaryController extends javax.swing.JFrame {
      */
     public SecretaryController() {
         initComponents();
+        combine();
+        addNewPatientPanelListener();
+        addDentistCalendarPanelListener();
+        addHygienistCalendarPanelListener();
+        addSearchPanelListener();
+        addBookAppointmentPanelListener();
+        addCancelAppointmentListener();
     }
 
     /**
@@ -46,25 +54,30 @@ public class SecretaryController extends javax.swing.JFrame {
         calendars = new javax.swing.JTabbedPane();
         dentistCalendar = new DentalCare.views.CalendarPanel();
         hygienistCalendar = new DentalCare.views.CalendarPanel();
-        bookAppointmentPanel = new javax.swing.JPanel();
-        bookAppointmentTitlePanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        bookAppointmentLowerPanel = new javax.swing.JPanel();
-        searchPanel = new DentalCare.views.SearchPatientPanel();
-        bookAppointmentForm = new DentalCare.views.BookAppointmentPanel();
         newPatientPanel = new DentalCare.views.NewPatientPanel();
+        bookAppointmentPanel = new javax.swing.JPanel();
+        bookAppointmentLowerPanel = new javax.swing.JPanel();
+        bookAppointmentSearchPanel = new DentalCare.views.SearchPatientPanel();
+        bookAppointmentForm = new DentalCare.views.BookAppointmentPanel();
         cancelAppointmentPanel = new javax.swing.JPanel();
         cancelAppointmentTitlePanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         canceAppointmentLowerPanel = new javax.swing.JPanel();
-        searchPanel1 = new DentalCare.views.SearchPatientPanel();
-        cancelAppointmentForm = new DentalCare.views.cancelAppointmentPanel();
+        cancelAppointmentSearchPanel = new DentalCare.views.SearchPatientPanel();
+        cancelAppointmentForm = new DentalCare.views.CancelAppointmentPanel();
+        editPatientPanel = new javax.swing.JPanel();
+        editAppointmentTitlePanel = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        editPatientSearchPanel = new DentalCare.views.SearchPatientPanel();
+        editPatientLowerPanel = new DentalCare.views.EditPatientPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         viewMenu = new javax.swing.JMenu();
         calendarMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         newPatientMenu = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
+        editPatientMenu = new javax.swing.JMenuItem();
+        cancelMenu = new javax.swing.JMenu();
         bookAppointmentMenu = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -78,46 +91,17 @@ public class SecretaryController extends javax.swing.JFrame {
         calendars.addTab("Hygienist", hygienistCalendar);
 
         mainPanel.add(calendars, "calendars");
+        mainPanel.add(newPatientPanel, "newPatient");
 
         bookAppointmentPanel.setLayout(new java.awt.BorderLayout());
 
-        bookAppointmentTitlePanel.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setText("Book an Appointment");
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout bookAppointmentTitlePanelLayout = new javax.swing.GroupLayout(bookAppointmentTitlePanel);
-        bookAppointmentTitlePanel.setLayout(bookAppointmentTitlePanelLayout);
-        bookAppointmentTitlePanelLayout.setHorizontalGroup(
-            bookAppointmentTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(bookAppointmentTitlePanelLayout.createSequentialGroup()
-                .addGap(121, 121, 121)
-                .addComponent(jLabel1)
-                .addContainerGap(1743, Short.MAX_VALUE))
-        );
-        bookAppointmentTitlePanelLayout.setVerticalGroup(
-            bookAppointmentTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bookAppointmentTitlePanelLayout.createSequentialGroup()
-                .addContainerGap(49, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(37, 37, 37))
-        );
-
-        bookAppointmentPanel.add(bookAppointmentTitlePanel, java.awt.BorderLayout.PAGE_START);
-
         bookAppointmentLowerPanel.setLayout(new java.awt.BorderLayout());
-        bookAppointmentLowerPanel.add(searchPanel, java.awt.BorderLayout.PAGE_START);
+        bookAppointmentLowerPanel.add(bookAppointmentSearchPanel, java.awt.BorderLayout.PAGE_START);
         bookAppointmentLowerPanel.add(bookAppointmentForm, java.awt.BorderLayout.CENTER);
 
         bookAppointmentPanel.add(bookAppointmentLowerPanel, java.awt.BorderLayout.CENTER);
 
         mainPanel.add(bookAppointmentPanel, "bookAppointment");
-        mainPanel.add(newPatientPanel, "newPatient");
 
         cancelAppointmentPanel.setLayout(new java.awt.BorderLayout());
 
@@ -138,7 +122,7 @@ public class SecretaryController extends javax.swing.JFrame {
             .addGroup(cancelAppointmentTitlePanelLayout.createSequentialGroup()
                 .addGap(121, 121, 121)
                 .addComponent(jLabel2)
-                .addContainerGap(1767, Short.MAX_VALUE))
+                .addContainerGap(825, Short.MAX_VALUE))
         );
         cancelAppointmentTitlePanelLayout.setVerticalGroup(
             cancelAppointmentTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -151,12 +135,52 @@ public class SecretaryController extends javax.swing.JFrame {
         cancelAppointmentPanel.add(cancelAppointmentTitlePanel, java.awt.BorderLayout.PAGE_START);
 
         canceAppointmentLowerPanel.setLayout(new java.awt.BorderLayout());
-        canceAppointmentLowerPanel.add(searchPanel1, java.awt.BorderLayout.PAGE_START);
+        canceAppointmentLowerPanel.add(cancelAppointmentSearchPanel, java.awt.BorderLayout.PAGE_START);
         canceAppointmentLowerPanel.add(cancelAppointmentForm, java.awt.BorderLayout.CENTER);
 
         cancelAppointmentPanel.add(canceAppointmentLowerPanel, java.awt.BorderLayout.CENTER);
 
         mainPanel.add(cancelAppointmentPanel, "cancelAppointment");
+
+        editPatientPanel.setLayout(new java.awt.BorderLayout());
+
+        editAppointmentTitlePanel.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setText("Edit Patient");
+        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel1MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout editAppointmentTitlePanelLayout = new javax.swing.GroupLayout(editAppointmentTitlePanel);
+        editAppointmentTitlePanel.setLayout(editAppointmentTitlePanelLayout);
+        editAppointmentTitlePanelLayout.setHorizontalGroup(
+            editAppointmentTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editAppointmentTitlePanelLayout.createSequentialGroup()
+                .addGap(123, 123, 123)
+                .addComponent(jLabel1)
+                .addContainerGap(961, Short.MAX_VALUE))
+        );
+        editAppointmentTitlePanelLayout.setVerticalGroup(
+            editAppointmentTitlePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editAppointmentTitlePanelLayout.createSequentialGroup()
+                .addContainerGap(37, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addContainerGap())
+        );
+
+        editPatientPanel.add(editAppointmentTitlePanel, java.awt.BorderLayout.PAGE_START);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(new java.awt.BorderLayout());
+        jPanel3.add(editPatientSearchPanel, java.awt.BorderLayout.PAGE_START);
+        jPanel3.add(editPatientLowerPanel, java.awt.BorderLayout.CENTER);
+
+        editPatientPanel.add(jPanel3, java.awt.BorderLayout.CENTER);
+
+        mainPanel.add(editPatientPanel, "editPatient");
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
@@ -167,7 +191,7 @@ public class SecretaryController extends javax.swing.JFrame {
             }
         });
 
-        calendarMenu.setText("Calendars");
+        calendarMenu.setText("Calendar");
         calendarMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 calendarMenuActionPerformed(evt);
@@ -188,9 +212,17 @@ public class SecretaryController extends javax.swing.JFrame {
         });
         jMenu2.add(newPatientMenu);
 
+        editPatientMenu.setText("Edit Patient");
+        editPatientMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editPatientMenuActionPerformed(evt);
+            }
+        });
+        jMenu2.add(editPatientMenu);
+
         jMenuBar1.add(jMenu2);
 
-        jMenu1.setText("Appointment");
+        cancelMenu.setText("Appointment");
 
         bookAppointmentMenu.setText("Book an appointment");
         bookAppointmentMenu.addActionListener(new java.awt.event.ActionListener() {
@@ -198,7 +230,7 @@ public class SecretaryController extends javax.swing.JFrame {
                 bookAppointmentMenuActionPerformed(evt);
             }
         });
-        jMenu1.add(bookAppointmentMenu);
+        cancelMenu.add(bookAppointmentMenu);
 
         jMenuItem1.setText("Cancel Appointment");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
@@ -206,9 +238,9 @@ public class SecretaryController extends javax.swing.JFrame {
                 jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        cancelMenu.add(jMenuItem1);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(cancelMenu);
 
         setJMenuBar(jMenuBar1);
 
@@ -224,32 +256,29 @@ public class SecretaryController extends javax.swing.JFrame {
     private void newPatientMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newPatientMenuActionPerformed
         CardLayout cl = (CardLayout)(mainPanel.getLayout());
         cl.show(mainPanel, "newPatient" );
-        addNewPatientPanelListener();
+        
     }//GEN-LAST:event_newPatientMenuActionPerformed
 
     private void calendarMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calendarMenuActionPerformed
         CardLayout cl = (CardLayout)(mainPanel.getLayout());
-        cl.show(mainPanel, "newPatient" );
+        cl.show(mainPanel, "calendars" );
         // Get list of appointments for both Dentist and Hygienist
         //dentistCalendar.addAppointmentArray(dentistAppointments)
         //hygienistCalendar.addAppointmentArray(hygienistAppointments)
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-        addDentistCalendarPanelListener();
-        addHygienistCalendarPanelListener();
         LocalDateTime now = LocalDateTime.now();
         currentWeek = now.with(DayOfWeek.MONDAY);
     }//GEN-LAST:event_calendarMenuActionPerformed
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        addSearchPanelListener();
+        
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void bookAppointmentMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookAppointmentMenuActionPerformed
         CardLayout cl = (CardLayout)(mainPanel.getLayout());
         cl.show(mainPanel, "bookAppointment" );
-        combine();
-        addSearchPanelListener();
-        addBookAppointmentPanelListener();
+        // THIS WILL GET REMOVED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+        bookAppointmentForm.clearPatientName();
     }//GEN-LAST:event_bookAppointmentMenuActionPerformed
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
@@ -259,8 +288,15 @@ public class SecretaryController extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         CardLayout cl = (CardLayout)(mainPanel.getLayout());
         cl.show(mainPanel, "cancelAppointment" );
-        addCancelCalendarPanelListener();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void editPatientMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPatientMenuActionPerformed
+        CardLayout cl = (CardLayout)(mainPanel.getLayout());
+        cl.show(mainPanel, "editPatient" );
+        editPatientLowerPanel.clearAll();
+        addSearchPanelListener();
+        addEditPatientPanelListener();
+    }//GEN-LAST:event_editPatientMenuActionPerformed
 
     
 
@@ -268,63 +304,143 @@ public class SecretaryController extends javax.swing.JFrame {
     // Listeners for all panels
     
             private void addNewPatientPanelListener() {
-                newPatientPanel.addSaveActionListener((ActionEvent e) -> {
-                    try {
-                        int houseNumber = newPatientPanel.getHouseNumber();
-                        String street = newPatientPanel.getStreet();
-                        String district = newPatientPanel.getDistrict();
-                        String city = newPatientPanel.getCity();
-                        String postCode = newPatientPanel.getPostCode();
-                        Address address = new Address(houseNumber,street,district,city,postCode);
-
-                        String title = newPatientPanel.getTitle();
-                        String forename = newPatientPanel.getForename();
-                        String surname = newPatientPanel.getSurname();
-                        LocalDate dateOfBirth = newPatientPanel.getDateOfBirth();
-                        int contactNumber = newPatientPanel.getContactNumber();
-
-                        String healthPlanName = newPatientPanel.getHealthPlan();
-                        HealthCarePlan healthPlan = new HealthCarePlan(healthPlanName);
-
-                        Treatment[] treatments = null;
-                        Appointment[] appointments = null;
-                        
-
-                        Patient patient = new Patient(title, forename, surname,dateOfBirth, contactNumber, healthPlan,treatments,appointments);
-                        
-                        //Add patient to database method here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                        
-                        JOptionPane.showMessageDialog(null, "Data Submitted");
-                        newPatientPanel.clearAll();
-                    }catch(NumberFormatException el) {
-                        JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                newPatientPanel.addSaveActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            int houseNumber = newPatientPanel.getHouseNumber();
+                            String street = newPatientPanel.getStreet();
+                            String district = newPatientPanel.getDistrict();
+                            String city = newPatientPanel.getCity();
+                            String postCode = newPatientPanel.getPostCode();
+                            Address address = new Address(houseNumber,street,district,city,postCode);
+                            
+                            String title = newPatientPanel.getTitle();
+                            String forename = newPatientPanel.getForename();
+                            String surname = newPatientPanel.getSurname();
+                            LocalDate dateOfBirth = newPatientPanel.getDateOfBirth();
+                            int contactNumber = newPatientPanel.getContactNumber();
+                            
+                            HealthCarePlan healthPlan = newPatientPanel.getHealthPlan();
+                            
+                            Treatment[] treatments = null;
+                            Appointment[] appointments = null;
+                            
+                            
+                            Patient patient = new Patient(title, forename, surname, address, dateOfBirth, contactNumber, healthPlan,treatments,appointments);
+                            
+                            //Add patient to database method here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            
+                            JOptionPane.showMessageDialog(null, "Data Submitted");
+                            newPatientPanel.clearAll();
+                        }catch(NumberFormatException el) {
+                            JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
-                    
-                   
-                    
-
+                });
+            }
+            
+            private void addEditPatientPanelListener() {
+                editPatientLowerPanel.addSaveActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            int houseNumber = editPatientLowerPanel.getHouseNumber();
+                            String street = editPatientLowerPanel.getStreet();
+                            String district = editPatientLowerPanel.getDistrict();
+                            String city = editPatientLowerPanel.getCity();
+                            String postCode = editPatientLowerPanel.getPostCode();
+                            Address address = new Address(houseNumber,street,district,city,postCode);
+                            
+                            String title = editPatientLowerPanel.getTitle();
+                            String forename = editPatientLowerPanel.getForename();
+                            String surname = editPatientLowerPanel.getSurname();
+                            LocalDate dateOfBirth = editPatientLowerPanel.getDateOfBirth();
+                            int contactNumber = editPatientLowerPanel.getContactNumber();
+                            
+                            HealthCarePlan healthPlan = editPatientLowerPanel.getHealthPlan();
+                            if(editPatientLowerPanel.isUnsubcribe())
+                                healthPlan = null;
+                            
+                            Treatment[] treatments = null;
+                            Appointment[] appointments = null;
+                            
+                            
+                            Patient patient = new Patient(title, forename, surname, address, dateOfBirth, contactNumber, healthPlan,treatments,appointments);
+                            
+                            //Add patient to database method here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            
+                            JOptionPane.showMessageDialog(null, "Data Submitted");
+                            newPatientPanel.clearAll();
+                        }catch(NumberFormatException | ArrayIndexOutOfBoundsException el) {
+                            JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
                 });
             }
             
             private void addSearchPanelListener() {
-                searchPanel.addSearchActionListener((ActionEvent e) -> {
+                bookAppointmentSearchPanel.addSearchActionListener((ActionEvent e) -> {
                     try {
                         bookAppointmentForm.clearPatientName();
                         
-                        LocalDate dateOfBirth = searchPanel.getDateOfBirth();
-                        int houseNumber = searchPanel.getHouseNumber();
-                        String postCode = searchPanel.getPostCode();
+                        LocalDate dateOfBirth = bookAppointmentSearchPanel.getDateOfBirth();
+                        int houseNumber = bookAppointmentSearchPanel.getHouseNumber();
+                        String postCode = bookAppointmentSearchPanel.getPostCode();
                         
                         /// Missing impliementation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
                         //Method here should turn an array of patient object
                         Patient[] patients = null;
                         bookAppointmentForm.updatePatientNames(patientExamples);
                         
+                        JOptionPane.showMessageDialog(null, "View results on patient dropbox","Search complete", JOptionPane.INFORMATION_MESSAGE);
+                        
+                    }catch(NumberFormatException | ArrayIndexOutOfBoundsException el) {
+                        JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                    }catch(java.lang.NullPointerException el) {
+                            JOptionPane.showMessageDialog(null, "No Results Found","Search", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+                
+                editPatientSearchPanel.addSearchActionListener((ActionEvent e) -> {
+                    try {
+                        editPatientLowerPanel.clearAll();
+                        
+                        LocalDate dateOfBirth = editPatientSearchPanel.getDateOfBirth();
+                        int houseNumber = editPatientSearchPanel.getHouseNumber();
+                        String postCode = editPatientSearchPanel.getPostCode();
+                        
+                        /// Missing impliementation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+                        //Method here should turn an array of patient object
+                        Patient[] patients = null;
+                        editPatientLowerPanel.updatePatientNames(patientExamples);
+                        
+                        
+                    }catch(NumberFormatException | ArrayIndexOutOfBoundsException el) {
+                        JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                    }catch(java.lang.NullPointerException el) {
+                            JOptionPane.showMessageDialog(null, "No Results Found","Search", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
+                
+                
+                cancelAppointmentSearchPanel.addSearchActionListener((ActionEvent e) -> {
+                    try {
+                        cancelAppointmentForm.clearAll();
+                        
+                        LocalDate dateOfBirth = cancelAppointmentSearchPanel.getDateOfBirth();
+                        int houseNumber = cancelAppointmentSearchPanel.getHouseNumber();
+                        String postCode = cancelAppointmentSearchPanel.getPostCode();
+                        
+                        /// Missing impliementation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+                        //Method here should turn an array of patient object
+                        Patient[] patients = null;
+                        cancelAppointmentForm.updatePatientNames(patientExamples);
+                        
                         
                     }catch(NumberFormatException el) {
                         JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
                     }
-
                 });
             }
             
@@ -332,21 +448,22 @@ public class SecretaryController extends javax.swing.JFrame {
                bookAppointmentForm.addSaveActionListener((ActionEvent e) -> {
                     try {
                         
-                        Patient patient = bookAppointmentForm.getPatientName();
+                        Patient patient = bookAppointmentForm.getPatient();
                         String partner = bookAppointmentForm.getPartner().toUpperCase();
-                        LocalDateTime startTime = bookAppointmentForm.getStartTime();
-                        LocalDateTime endTime = bookAppointmentForm.getEndTime();
+                        LocalDate date = bookAppointmentForm.getDate();
+                        LocalTime startTime = bookAppointmentForm.getStartTime();
+                        LocalTime endTime = bookAppointmentForm.getEndTime();
                         Treatment[] treatments = bookAppointmentForm.getTreatments();
                        
                         String fullName = patient.getForename() +" "+patient.getSurname();
-                        Appointment appointment =  new Appointment(treatments,Partner.valueOf(partner),fullName,startTime,endTime);
+                        Appointment appointment =  new Appointment(treatments,Partner.valueOf(partner),fullName,date,startTime,endTime);
                         
                         // Book appointment into Database !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         
                         JOptionPane.showMessageDialog(null, "Appointment is booked");
                         
                         bookAppointmentForm.clearAll();
-                    }catch(NumberFormatException | ArrayIndexOutOfBoundsException el) {
+                    }catch(NumberFormatException el) {
                         JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
                     }
                     
@@ -382,7 +499,7 @@ public class SecretaryController extends javax.swing.JFrame {
                  
             }
             
-            private void addCancelCalendarPanelListener() {
+            private void addCancelAppointmentListener() {
                 
                 cancelAppointmentForm.addCancelListener((ActionEvent e) -> {
                     Appointment appointment = cancelAppointmentForm.getAppointmentComboBox();
@@ -454,13 +571,12 @@ public class SecretaryController extends javax.swing.JFrame {
             LocalDate dateOfBirth = LocalDate.now();
             int contactNumber = 565657565;
             
-            String healthPlanName = "NHS";
-            HealthCarePlan healthPlan = new HealthCarePlan(healthPlanName);
+            HealthCarePlan healthPlan = null;
             
             Treatment[] treatments = null;
             Appointment[] appointments = null;
             
-            Patient patient = new Patient(title, forename, surname,dateOfBirth, contactNumber, healthPlan,treatments, appointments);
+            Patient patient = new Patient(title, forename, surname,address, dateOfBirth, contactNumber, healthPlan,treatments, appointments);
             
             return patient;
     }
@@ -470,27 +586,32 @@ public class SecretaryController extends javax.swing.JFrame {
     private javax.swing.JPanel bookAppointmentLowerPanel;
     private javax.swing.JMenuItem bookAppointmentMenu;
     private javax.swing.JPanel bookAppointmentPanel;
-    private javax.swing.JPanel bookAppointmentTitlePanel;
+    private DentalCare.views.SearchPatientPanel bookAppointmentSearchPanel;
     private javax.swing.JMenuItem calendarMenu;
     private javax.swing.JTabbedPane calendars;
     private javax.swing.JPanel canceAppointmentLowerPanel;
-    private DentalCare.views.cancelAppointmentPanel cancelAppointmentForm;
+    private DentalCare.views.CancelAppointmentPanel cancelAppointmentForm;
     private javax.swing.JPanel cancelAppointmentPanel;
+    private DentalCare.views.SearchPatientPanel cancelAppointmentSearchPanel;
     private javax.swing.JPanel cancelAppointmentTitlePanel;
+    private javax.swing.JMenu cancelMenu;
     private DentalCare.views.CalendarPanel dentistCalendar;
+    private javax.swing.JPanel editAppointmentTitlePanel;
+    private DentalCare.views.EditPatientPanel editPatientLowerPanel;
+    private javax.swing.JMenuItem editPatientMenu;
+    private javax.swing.JPanel editPatientPanel;
+    private DentalCare.views.SearchPatientPanel editPatientSearchPanel;
     private DentalCare.views.CalendarPanel hygienistCalendar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuItem newPatientMenu;
     private DentalCare.views.NewPatientPanel newPatientPanel;
-    private DentalCare.views.SearchPatientPanel searchPanel;
-    private DentalCare.views.SearchPatientPanel searchPanel1;
     private javax.swing.JMenu viewMenu;
     // End of variables declaration//GEN-END:variables
 

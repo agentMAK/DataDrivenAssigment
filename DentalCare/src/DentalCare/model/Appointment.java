@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 package DentalCare.model;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  *
@@ -16,27 +18,48 @@ public class Appointment {
     //Instances
     private Treatment[] treatments;
     private Partner partner;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private String fullName;
+    private boolean isAppointmentCompleted = false;
+    // Default time for appointment is an hour
+    private final long DEFAULTDURATION = 3600;
     
     
     
-    public Appointment(Treatment[] treatments, Partner partner, String fullName, LocalDateTime startTime, LocalDateTime endTime) {
+    public Appointment(Treatment[] treatments, Partner partner, String fullName, LocalDate date, LocalTime startTime, LocalTime endTime) {
         this.treatments = treatments;
         this.partner = partner;
         this.fullName = fullName;
+        this.date = date;
         this.startTime = startTime;
-        this.endTime = endTime;
-         
-        
+        if(endTime == null) 
+            calculateEndTime();
+        else
+            this.endTime = endTime;   
     }
     
     //Method
-    
+    private void calculateEndTime(){
+        long durationSeconds = 0;
+        if (treatments == null)
+            this.endTime = startTime.plusSeconds(DEFAULTDURATION);
+        
+        else {
+            
+            for(Treatment t: treatments) {
+                //durationSeconds += t.getDurationSeconds();
+                System.out.print("A treatment");
+            }
+            this.endTime = startTime.plusSeconds(durationSeconds);
+        }
+        
+    }
     public boolean hasPassed() {
         LocalDateTime now = LocalDateTime.now();
-        return !startTime.isAfter(now);
+        LocalDateTime startDateTime = LocalDateTime.of(getDate(), getStartTime());
+        return !startDateTime.isAfter(now);
 
     }
 
@@ -47,14 +70,6 @@ public class Appointment {
     public Treatment[] getTreatment() {
         return treatments;
     }
-
-    /**
-     * @param treatment the treatment to set
-     */
-    public void setTreatment(Treatment treatment) {
-        this.treatments = treatments;
-    }
-
     /**
      * @return the partner
      */
@@ -72,28 +87,21 @@ public class Appointment {
     /**
      * @return the startTime
      */
-    public LocalDateTime getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
-    }
-
-    /**
-     * @param startTime the startTime to set
-     */
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
     }
 
     /**
      * @return the endTime
      */
-    public LocalDateTime getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
     /**
      * @param endTime the endTime to set
      */
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
@@ -107,6 +115,35 @@ public class Appointment {
     public void removeAllItems() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    /**
+     * @return the date
+     */
+    public LocalDate getDate() {
+        return date;
+    }
+
+    /**
+     * @param startTime the startTime to set
+     */
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * @return the isAppointmentCompleted
+     */
+    public boolean isIsAppointmentCompleted() {
+        return isAppointmentCompleted;
+    }
+
+    /**
+     * @param isAppointmentCompleted the isAppointmentCompleted to set
+     */
+    public void setIsAppointmentCompleted(boolean isAppointmentCompleted) {
+        this.isAppointmentCompleted = isAppointmentCompleted;
+    }
+    
     
     
 }

@@ -13,12 +13,12 @@ import javax.swing.JPanel;
  *
  * @author Martin
  */
-public class CalendarPanel extends javax.swing.JPanel {
+public class CalendarDayView extends javax.swing.JPanel {
 
     /**
      * Creates new form calendarPanel
      */
-    public CalendarPanel() {
+    public CalendarDayView() {
         initComponents();
     }
 
@@ -32,24 +32,14 @@ public class CalendarPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         calendar2 = new javax.swing.JPanel();
-        weekDayNames2 = new javax.swing.JPanel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
+        weekDayNamesPanel = new javax.swing.JPanel();
+        dayLabel = new javax.swing.JLabel();
         weekElements2 = new javax.swing.JPanel();
-        times2 = new javax.swing.JPanel();
-        monday = new javax.swing.JPanel();
+        dayPanel = new javax.swing.JPanel();
         appointment = new javax.swing.JPanel();
         time = new javax.swing.JLabel();
         patientPanel = new javax.swing.JPanel();
         patient = new javax.swing.JLabel();
-        tuesday = new javax.swing.JPanel();
-        wednesday = new javax.swing.JPanel();
-        thursday = new javax.swing.JPanel();
-        friday = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         previousWeek = new javax.swing.JButton();
         nextWeek = new javax.swing.JButton();
@@ -59,57 +49,25 @@ public class CalendarPanel extends javax.swing.JPanel {
         calendar2.setBackground(new java.awt.Color(255, 255, 255));
         calendar2.setToolTipText("");
 
-        weekDayNames2.setBackground(new java.awt.Color(255, 255, 255));
-        weekDayNames2.setLayout(new java.awt.GridLayout(1, 0));
+        weekDayNamesPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel14.setText("Times");
-        weekDayNames2.add(jLabel14);
-
-        jLabel15.setText("Monday");
-        weekDayNames2.add(jLabel15);
-
-        jLabel16.setText("Tuesday");
-        weekDayNames2.add(jLabel16);
-
-        jLabel17.setText("Wedeneday");
-        weekDayNames2.add(jLabel17);
-
-        jLabel18.setText("Thursday");
-        weekDayNames2.add(jLabel18);
-
-        jLabel19.setText("Friday");
-        weekDayNames2.add(jLabel19);
+        dayLabel.setText("Monday");
+        weekDayNamesPanel.add(dayLabel);
 
         weekElements2.setLayout(new java.awt.GridLayout(1, 7));
 
-        times2.setBackground(new java.awt.Color(255, 255, 255));
-        times2.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, new java.awt.Color(204, 204, 204)));
-
-        javax.swing.GroupLayout times2Layout = new javax.swing.GroupLayout(times2);
-        times2.setLayout(times2Layout);
-        times2Layout.setHorizontalGroup(
-            times2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 293, Short.MAX_VALUE)
-        );
-        times2Layout.setVerticalGroup(
-            times2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 567, Short.MAX_VALUE)
-        );
-
-        weekElements2.add(times2);
-
-        monday.setBackground(new java.awt.Color(255, 255, 255));
-        monday.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
-        monday.setMinimumSize(new java.awt.Dimension(210, 56));
+        dayPanel.setBackground(new java.awt.Color(255, 255, 255));
+        dayPanel.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(204, 204, 204)));
+        dayPanel.setMinimumSize(new java.awt.Dimension(210, 56));
         java.awt.FlowLayout flowLayout2 = new java.awt.FlowLayout();
         flowLayout2.setAlignOnBaseline(true);
-        monday.setLayout(flowLayout2);
+        dayPanel.setLayout(flowLayout2);
 
         appointment.setBackground(new java.awt.Color(237, 250, 250));
         appointment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         appointment.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        appointment.setPreferredSize(new java.awt.Dimension(200, 100));
         appointment.setEnabled(false);
+        appointment.setPreferredSize(new java.awt.Dimension(600, 100));
         appointment.setLayout(new java.awt.BorderLayout());
 
         time.setText("15:00 - 15:50");
@@ -125,70 +83,30 @@ public class CalendarPanel extends javax.swing.JPanel {
 
         appointment.add(patientPanel, java.awt.BorderLayout.CENTER);
 
-        monday.add(appointment);
+        dayPanel.add(appointment);
 
-        weekElements2.add(monday);
-
-        tuesday.setBackground(new java.awt.Color(255, 255, 255));
-        tuesday.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 1, new java.awt.Color(204, 204, 204)));
-        weekElements2.add(tuesday);
-
-        wednesday.setBackground(new java.awt.Color(255, 255, 255));
-        wednesday.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 1, new java.awt.Color(204, 204, 204)));
-        weekElements2.add(wednesday);
-
-        thursday.setBackground(new java.awt.Color(255, 255, 255));
-        thursday.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 1, new java.awt.Color(204, 204, 204)));
-
-        javax.swing.GroupLayout thursdayLayout = new javax.swing.GroupLayout(thursday);
-        thursday.setLayout(thursdayLayout);
-        thursdayLayout.setHorizontalGroup(
-            thursdayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 292, Short.MAX_VALUE)
-        );
-        thursdayLayout.setVerticalGroup(
-            thursdayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 567, Short.MAX_VALUE)
-        );
-
-        weekElements2.add(thursday);
-
-        friday.setBackground(new java.awt.Color(255, 255, 255));
-        friday.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 1, 0, new java.awt.Color(204, 204, 204)));
-
-        javax.swing.GroupLayout fridayLayout = new javax.swing.GroupLayout(friday);
-        friday.setLayout(fridayLayout);
-        fridayLayout.setHorizontalGroup(
-            fridayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 293, Short.MAX_VALUE)
-        );
-        fridayLayout.setVerticalGroup(
-            fridayLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 567, Short.MAX_VALUE)
-        );
-
-        weekElements2.add(friday);
+        weekElements2.add(dayPanel);
 
         javax.swing.GroupLayout calendar2Layout = new javax.swing.GroupLayout(calendar2);
         calendar2.setLayout(calendar2Layout);
         calendar2Layout.setHorizontalGroup(
             calendar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(weekDayNames2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(weekElements2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(weekDayNamesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(weekElements2, javax.swing.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
         );
         calendar2Layout.setVerticalGroup(
             calendar2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(calendar2Layout.createSequentialGroup()
-                .addComponent(weekDayNames2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(weekDayNamesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(weekElements2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(weekElements2, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE))
         );
 
         add(calendar2, java.awt.BorderLayout.CENTER);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        previousWeek.setText("Previous Week");
+        previousWeek.setText("Previous Day");
         previousWeek.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previousWeekActionPerformed(evt);
@@ -196,7 +114,7 @@ public class CalendarPanel extends javax.swing.JPanel {
         });
         jPanel1.add(previousWeek);
 
-        nextWeek.setText("Next Week");
+        nextWeek.setText("Next Day");
         jPanel1.add(nextWeek);
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -218,7 +136,7 @@ public class CalendarPanel extends javax.swing.JPanel {
             appointment.setBorder(javax.swing.BorderFactory.createEtchedBorder());
             appointment.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             appointment.setEnabled(false);
-            appointment.setPreferredSize(new java.awt.Dimension(200, 100));
+            appointment.setPreferredSize(new java.awt.Dimension(600, 100));
             appointment.setLayout(new java.awt.BorderLayout());
 
             String startTime = app.getStartTime().toString().substring(11);
@@ -236,17 +154,21 @@ public class CalendarPanel extends javax.swing.JPanel {
             patientPanel.add(patient, java.awt.BorderLayout.PAGE_START);
 
             appointment.add(patientPanel, java.awt.BorderLayout.CENTER);
+            dayPanel.add(appointment);
 
-            weekPanels[app.getDate().getDayOfWeek().getValue() + 1].add(appointment);
+            updateDayLabel(app.getDate().getDayOfWeek().getValue());
         }
         
-        for(JPanel panel: weekPanels) {
-            panel.revalidate();
-            panel.repaint();
-        }
+            dayPanel.revalidate();
+            dayPanel.repaint();
     }
     
-    public void addChangeWeekListener(ActionListener previous, ActionListener next) {
+    private void updateDayLabel(int day) {
+        dayLabel.setText(dayOfWeekStrings[day]);
+        weekDayNamesPanel.revalidate();
+        weekDayNamesPanel.repaint();
+    }
+    public void addChangeDayListener(ActionListener previous, ActionListener next) {
         previousWeek.addActionListener(previous);
         nextWeek.addActionListener(next);
     }
@@ -254,29 +176,18 @@ public class CalendarPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel appointment;
     private javax.swing.JPanel calendar2;
-    private javax.swing.JPanel friday;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel dayLabel;
+    private javax.swing.JPanel dayPanel;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel monday;
     private javax.swing.JButton nextWeek;
     private javax.swing.JLabel patient;
     private javax.swing.JPanel patientPanel;
     private javax.swing.JButton previousWeek;
-    private javax.swing.JPanel thursday;
     private javax.swing.JLabel time;
-    private javax.swing.JPanel times2;
-    private javax.swing.JPanel tuesday;
-    private javax.swing.JPanel wednesday;
-    private javax.swing.JPanel weekDayNames2;
+    private javax.swing.JPanel weekDayNamesPanel;
     private javax.swing.JPanel weekElements2;
     // End of variables declaration//GEN-END:variables
     
-    //More variables
-    private final JPanel[] weekPanels = {monday,tuesday,wednesday,thursday,friday};
+    private final String[] dayOfWeekStrings = {"","Monday","Tuesday","Wednesday","Thurday","Friday"};
 
 }
