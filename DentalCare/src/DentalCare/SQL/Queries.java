@@ -124,7 +124,7 @@ public class Queries {
         }
     }
     
-    public Appointment[] getAppointments(Partner p) {
+    public static Appointment[] getAppointments(Partner p) {
 
         Connection con = null;
         PreparedStatement pst = null;
