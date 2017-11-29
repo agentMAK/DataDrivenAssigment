@@ -25,12 +25,15 @@ import java.util.logging.Logger;
 import DentalCare.model.Patient;
 import DentalCare.model.Appointment;
 import DentalCare.model.HealthCarePlan;
+import DentalCare.model.IncorrectInputException;
 import DentalCare.model.Partner;
+import DentalCare.model.Address;
+import DentalCare.model.HealthCarePlan;
 import DentalCare.model.Treatment;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
-
+import DentalCare.model.TreatmentType;
 public class Queries {
 
     public static void addPatient(Patient p) {
@@ -124,7 +127,7 @@ public class Queries {
         }
     }
     
-    public static Appointment[] getAppointments(Partner p) {
+    public static Appointment[] getAppointments(Partner p,LocalDateTime startdate) throws IncorrectInputException {
 
         Connection con = null;
         PreparedStatement pst = null;
@@ -145,7 +148,7 @@ public class Queries {
                 LocalTime starttime = LocalTime.parse(rs.getString("starttime"));
                 LocalTime endtime = LocalTime.parse(rs.getString("endtime"));
                 int patientID = rs.getInt("patientID");
-                appointments.add(new Appointment(p,patientID,date,starttime,endtime));
+                appointments.add(new Appointment(null,p,patientID,date,starttime,endtime));
                
             }
 
@@ -177,7 +180,7 @@ public class Queries {
         }
         return appointments.toArray(new Appointment[appointments.size()]);
     }
-    public Appointment[] getAppointmentsbyWeek(LocalDateTime currentweek) {
+        public Appointment[] getAppointmentsbyWeek(Partner p, LocalDateTime currentweek) throws IncorrectInputException {
 
         Connection con = null;
         PreparedStatement pst = null;
@@ -189,9 +192,10 @@ public class Queries {
         try {
             
             con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("SELECT * FROM Appointments WHERE  Appointments.date BETWEEN (?) and (?)");
-            pst.setString(1, currentweek.toString());
-            pst.setString(2, currentweek.plusWeeks(1).toString());
+            pst = con.prepareStatement("SELECT * FROM Appointments WHERE  WHERE partner = (?) AND Appointments.date BETWEEN (?) and (?)");
+            pst.setString(1, p.toString());
+            pst.setString(2, currentweek.toString());
+            pst.setString(3, currentweek.plusWeeks(1).toString());
             rs = pst.executeQuery();
            
             while (rs.next()) {
@@ -200,7 +204,16 @@ public class Queries {
                 LocalTime endtime = LocalTime.parse(rs.getString("endtime"));
                 int patientID = rs.getInt("patientID");
                 Partner partner = Partner.valueOf(rs.getString("partner"));
-                appointments.add(new Appointment(partner,patientID,date,starttime,endtime));
+                Boolean b = rs.getBoolean("iscomplete");
+                Appointment appointment = null;
+                try {
+                    appointment =  new Appointment(null,partner,patientID,date,starttime,endtime,b);
+                } catch (IncorrectInputException ex) {
+                    Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                Treatment[] treatments = getTreatments(appointment);
+                appointments.add(new Appointment(treatments,partner,patientID,date,starttime,endtime,b));
                
             }
 
@@ -231,7 +244,7 @@ public class Queries {
         }
         return appointments.toArray(new Appointment[appointments.size()]);
     }
-    public Appointment[] getAppointmentsbyDay(LocalDateTime currentweek) {
+    public Appointment[] getAppointmentsbyDay(Partner p, LocalDate currentDay) throws IncorrectInputException {
 
         Connection con = null;
         PreparedStatement pst = null;
@@ -243,9 +256,9 @@ public class Queries {
         try {
             
             con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("SELECT * FROM Appointments WHERE  Appointments.date BETWEEN (?) and (?)");
-            pst.setString(1, currentweek.toString());
-            pst.setString(2, currentweek.plusDays(1).toString());
+            pst = con.prepareStatement("SELECT * FROM Appointments WHERE  WHERE partner = (?) AND Appointments.date =(?)");
+            pst.setString(1, p.toString());
+            pst.setString(2, currentDay.toString());
             rs = pst.executeQuery();
            
             while (rs.next()) {
@@ -254,7 +267,16 @@ public class Queries {
                 LocalTime endtime = LocalTime.parse(rs.getString("endtime"));
                 int patientID = rs.getInt("patientID");
                 Partner partner = Partner.valueOf(rs.getString("partner"));
-                appointments.add(new Appointment(partner,patientID,date,starttime,endtime));
+                Boolean b = rs.getBoolean("iscomplete");
+                Appointment appointment = null;
+                try {
+                    appointment =  new Appointment(null,partner,patientID,date,starttime,endtime,b);
+                } catch (IncorrectInputException ex) {
+                    Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                Treatment[] treatments = getTreatments(appointment);
+                appointments.add(new Appointment(treatments,partner,patientID,date,starttime,endtime,b));
                
             }
 
@@ -285,7 +307,7 @@ public class Queries {
         }
         return appointments.toArray(new Appointment[appointments.size()]);
     }
-    public Patient[] getPatients(LocalDate dob, int housenumber, String postcode) {
+    public static Patient[] getPatients(LocalDate dob, int housenumber, String postcode) {
 
         Connection con = null;
         PreparedStatement pst = null;
@@ -306,7 +328,7 @@ public class Queries {
             while (rs.next()) {
           
                 int patientID = rs.getInt("patientID");
-                patients.add(new Patient(patientID, rs.getString("title"), rs.getString("forename"), rs.getString("surname"), dob, rs.getInt("phone"), rs.getString("healthplan"), null, null));
+                patients.add(new Patient(patientID,rs.getString("title"), rs.getString("forename"), rs.getString("surname"),getAddress(patientID), dob, rs.getInt("phone"), getHealthPlan(patientID), null));
                
             }
 
@@ -336,5 +358,154 @@ public class Queries {
             }
         }
         return patients.toArray(new Patient[patients.size()]);
+    }
+    public Treatment[] getTreatments(Appointment appointment) {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<Treatment> treatments = new ArrayList<Treatment>();
+        String url = "jdbc:mysql://localhost:3306/mydb";
+        String user = "root";
+        String password = "password";
+        try {
+            
+            con = DriverManager.getConnection(url, user, password);
+            pst = con.prepareStatement("select treatments.* from treatments, appointments, appointmentstreatments where treatments.nametreatment = appointmentstreatments.idtreatment AND appointments.idappointment = appointmentstreatments.idappointment AND appointments.starttime = (?) AND appointments.partner = (?) AND appointments.date = (?)");
+            pst.setString(1, appointment.getStartTime().toString());
+            pst.setString(2, appointment.getPartner().toString());
+            pst.setString(3, appointment.getDate().toString());
+            rs = pst.executeQuery();
+           
+            while (rs.next()) {
+                String name = rs.getString("nametreatment");
+                int cost = rs.getInt("cost");
+                int duration = rs.getInt("duration");
+                TreatmentType type = TreatmentType.valueOf(rs.getString("treatmenttype"));
+                boolean ispaid = rs.getBoolean("ispaid");
+                ;
+                treatments.add(new Treatment(name,type,duration, cost,ispaid));
+               
+            }
+
+        } catch (SQLException ex) {
+            
+               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+
+        } finally {
+
+            try {
+            
+                if (rs != null) {
+                    rs.close();
+                }
+                
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (SQLException ex) {
+                
+                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return treatments.toArray(new Treatment[treatments.size()]);
+    }
+    public static Address getAddress(int patientID) {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        Address address = null;
+        String url = "jdbc:mysql://localhost:3306/mydb";
+        String user = "root";
+        String password = "password";
+        try {
+            
+            con = DriverManager.getConnection(url, user, password);
+            pst = con.prepareStatement("select address.* from patients, address where patients.idpatients = (?) and patients.address = address.idaddress;");
+            pst.setString(1,Integer.toString(patientID));
+            rs = pst.executeQuery();
+            address = new Address(rs.getInt("housenumber"),rs.getString("street"),rs.getString("district"),rs.getString("city"),rs.getString("postcode"));
+            
+
+        } catch (SQLException ex) {
+            
+               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+
+        } finally {
+
+            try {
+            
+                if (rs != null) {
+                    rs.close();
+                }
+                
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (SQLException ex) {
+                
+                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return address;
+    }
+    public static HealthCarePlan getHealthPlan(int patientID) {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        HealthCarePlan healthplan = null;
+        String url = "jdbc:mysql://localhost:3306/mydb";
+        String user = "root";
+        String password = "password";
+        try {
+            
+            con = DriverManager.getConnection(url, user, password);
+            pst = con.prepareStatement("select healthplan.* from patients, healthplan where patients.idpatient = (?) and patients.healthplan = healthplan.idhealthplan;");
+            pst.setString(1,Integer.toString(patientID));
+            rs = pst.executeQuery();
+            LocalDate date = LocalDate.parse(rs.getString("startdate"));
+
+            
+            healthplan = new HealthCarePlan(rs.getString("name"),date,rs.getInt("hygenevisits"),rs.getInt("checkups"),rs.getInt("repairvisits"),rs.getInt("cost"));
+            
+
+        } catch (SQLException ex) {
+            
+               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+
+        } finally {
+
+            try {
+            
+                if (rs != null) {
+                    rs.close();
+                }
+                
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (SQLException ex) {
+                
+                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return healthplan;
     }
     }

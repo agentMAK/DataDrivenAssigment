@@ -21,7 +21,7 @@ public class Appointment {
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String fullName;
+    private int patientID;
     private boolean isAppointmentCompleted = false;
     // Default time for appointment is an hour
     private final long DEFAULTDURATION = 3600;
@@ -33,10 +33,10 @@ public class Appointment {
     
     // Used when creating a brand new appointment
     public Appointment(Treatment[] treatments, Partner partner, 
-            String fullName, LocalDate date, LocalTime startTime, LocalTime endTime)  throws IncorrectInputException{
+            int patientID, LocalDate date, LocalTime startTime, LocalTime endTime)  throws IncorrectInputException{
         this.treatments = treatments;
         this.partner = partner;
-        this.fullName = fullName;     
+        this.patientID = patientID;     
         this.date = date;
         
         this.startTime = startTime;
@@ -54,8 +54,8 @@ public class Appointment {
 
     
     public Appointment(Treatment[] treatments, Partner partner, 
-            String fullName, LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAppointmentCompleted)  throws IncorrectInputException{
-        this(treatments,partner,fullName,date,startTime,endTime);
+            int patientID, LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAppointmentCompleted)  throws IncorrectInputException{
+        this(treatments,partner,patientID,date,startTime,endTime);
         this.isAppointmentCompleted = isAppointmentCompleted;
     }
     
@@ -112,10 +112,10 @@ public class Appointment {
     }
 
     /**
-     * @return the fullName
+     * @return the patientID
      */
-    public String getFullName() {
-        return fullName;
+    public int getPatientID() {
+        return patientID;
     }
 
     public void removeAllItems() {

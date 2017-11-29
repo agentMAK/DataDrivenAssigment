@@ -7,7 +7,6 @@ package DentalCare.views;
 
 import DentalCare.model.HealthCarePlan;
 import DentalCare.model.Patient;
-import com.github.lgooddatepicker.components.DatePicker;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.time.LocalDate;
@@ -480,6 +479,9 @@ public class EditPatientPanel extends javax.swing.JPanel {
         return currentPatients[patientPicker.getSelectedIndex()];
     }
 
+    public int getPatientId() {
+        return currentPatients[patientPicker.getSelectedIndex()].getiD();
+    }
     /**
      * @param healthPlan the healthPlan to set
      */
