@@ -1,0 +1,15 @@
+TYPE=VIEW
+query=select `mydb`.`patients`.`idpatients` AS `idpatients`,`mydb`.`patients`.`forename` AS `forename`,`mydb`.`patients`.`surname` AS `surname` from `mydb`.`patients`
+md5=d10a98b25463826e8c687924ab0be502
+updatable=1
+algorithm=0
+definer_user=root
+definer_host=localhost
+suid=2
+with_check_option=0
+timestamp=2017-11-21 18:47:26
+create-version=1
+source=SELECT \n        idpatients, forename, surname\n    FROM\n        patients
+client_cs_name=utf8
+connection_cl_name=utf8_general_ci
+view_body_utf8=select `mydb`.`patients`.`idpatients` AS `idpatients`,`mydb`.`patients`.`forename` AS `forename`,`mydb`.`patients`.`surname` AS `surname` from `mydb`.`patients`
