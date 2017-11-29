@@ -1,4 +1,4 @@
-package DentalCare;
+package DentalCare.model;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -11,13 +11,13 @@ package DentalCare;
  *
  * @author Martin
  */
-public class incorrectInput extends Exception {
+public class IncorrectInputException extends Exception {
 
     /**
      * Creates a new instance of <code>incorrectInput</code> without detail
      * message.
      */
-    public incorrectInput() {
+    public IncorrectInputException() {
     }
 
     /**
@@ -26,7 +26,7 @@ public class incorrectInput extends Exception {
      *
      * @param msg the detail message.
      */
-    public incorrectInput(String msg) {
+    public IncorrectInputException(String msg) {
         super(msg);
     }
 }

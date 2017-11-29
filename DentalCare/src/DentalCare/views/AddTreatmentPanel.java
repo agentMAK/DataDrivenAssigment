@@ -9,6 +9,7 @@ import DentalCare.model.Appointment;
 import DentalCare.model.Partner;
 import DentalCare.model.Patient;
 import DentalCare.model.Treatment;
+import DentalCare.model.TreatmentType;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 
@@ -35,6 +36,7 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
+        appointmentGroup = new javax.swing.ButtonGroup();
         mainPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         lastConsulationDateLabel = new javax.swing.JLabel();
@@ -48,6 +50,9 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         removeTreatmentCombo = new javax.swing.JComboBox<>();
         removeTreatmentButton = new javax.swing.JButton();
+        completed = new javax.swing.JRadioButton();
+        notCompleted = new javax.swing.JRadioButton();
+        updateRecord = new javax.swing.JButton();
 
         jLabel2.setText("jLabel2");
 
@@ -92,6 +97,21 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
 
         removeTreatmentButton.setText("Remove Treatment");
 
+        completed.setBackground(new java.awt.Color(255, 255, 255));
+        appointmentGroup.add(completed);
+        completed.setText("Appointment Completed");
+        completed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                completedActionPerformed(evt);
+            }
+        });
+
+        notCompleted.setBackground(new java.awt.Color(255, 255, 255));
+        appointmentGroup.add(notCompleted);
+        notCompleted.setText("Not Completed");
+
+        updateRecord.setText("Update Record");
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -104,12 +124,19 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
                             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel5)
                                 .addComponent(treatmentListLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(101, 101, 101)
-                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel7)
-                                .addComponent(addTreatmentCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8)
-                                .addComponent(removeTreatmentCombo, 0, 423, Short.MAX_VALUE)))
+                            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(mainPanelLayout.createSequentialGroup()
+                                    .addGap(101, 101, 101)
+                                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel7)
+                                        .addComponent(addTreatmentCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(mainPanelLayout.createSequentialGroup()
+                                    .addGap(102, 102, 102)
+                                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel8)
+                                            .addComponent(removeTreatmentCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(removeTreatmentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addComponent(addTreatmentButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(mainPanelLayout.createSequentialGroup()
                             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,7 +146,11 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
                             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(patientNameCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lastConsulationDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addComponent(removeTreatmentButton, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(completed, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(notCompleted))
+                    .addComponent(updateRecord, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
@@ -139,21 +170,26 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
                     .addComponent(jLabel7))
                 .addGap(18, 18, 18)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(treatmentListLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(treatmentListLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(129, 129, 129))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(addTreatmentCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(addTreatmentButton))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel8)))))
+                        .addGap(18, 18, 18)
+                        .addComponent(addTreatmentButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeTreatmentCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeTreatmentButton)
+                        .addGap(87, 87, 87)))
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(completed)
+                    .addComponent(notCompleted))
                 .addGap(18, 18, 18)
-                .addComponent(removeTreatmentCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(removeTreatmentButton)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addComponent(updateRecord)
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         add(mainPanel, java.awt.BorderLayout.PAGE_START);
@@ -170,18 +206,29 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
             selectedPatientIndex = 0;
         
         if (evt.getStateChange() == ItemEvent.SELECTED) {
-            Appointment lastAppointment = getCurrentPatients()[selectedPatientIndex].lastAppointment(currentPartner);
+            Appointment lastAppointment = currentPatients[selectedPatientIndex].lastAppointment(currentPartner);
             if(lastAppointment != null) {
                 updateLastConsultationField(lastAppointment);
                 updateTreatmentFields(lastAppointment.getTreatment());
+                
+                if(lastAppointment.getAppointmentCompleted())
+                    completed.setSelected(true);
+                else
+                    notCompleted.setSelected(true);
             }
         }
     }//GEN-LAST:event_patientNameComboItemStateChanged
+
+    private void completedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completedActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_completedActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addTreatmentButton;
     private javax.swing.JComboBox<String> addTreatmentCombo;
+    private javax.swing.ButtonGroup appointmentGroup;
+    private javax.swing.JRadioButton completed;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -190,27 +237,40 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel lastConsulationDateLabel;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JRadioButton notCompleted;
     private javax.swing.JComboBox<String> patientNameCombo;
     private javax.swing.JButton removeTreatmentButton;
     private javax.swing.JComboBox<String> removeTreatmentCombo;
     private javax.swing.JLabel treatmentListLabel;
+    private javax.swing.JButton updateRecord;
     // End of variables declaration//GEN-END:variables
 
     private Patient[] currentPatients;
     private Treatment[] currentTreatment;
     private Partner currentPartner;
     
-    final private Treatment HYGIENE = new Treatment("hygiene",45,20);
-    final private Treatment CHECKUP = new Treatment("Check - UP",45,20);
-    final private Treatment SILVERFILLING = new Treatment("Silver amalgam filling",90,60);
-    final private Treatment WHITEFILLING = new Treatment("White composite resin filling",150,60);
-    final private Treatment GOLDCROWN = new Treatment("Gold crown",500,60);
+    final private Treatment HYGIENE = new Treatment("hygiene",TreatmentType.HYGIENE,45,20);
+    final private Treatment CHECKUP = new Treatment("Check - UP",TreatmentType.CHECKUP,45,20);
+    final private Treatment SILVERFILLING = new Treatment("Silver amalgam filling",TreatmentType.REPAIR,90,60);
+    final private Treatment WHITEFILLING = new Treatment("White composite resin filling",TreatmentType.REPAIR,150,60);
+    final private Treatment GOLDCROWN = new Treatment("Gold crown",TreatmentType.COSMETIC,500,60);
     
     final private Treatment[] listOfTreatments = {HYGIENE,CHECKUP,SILVERFILLING,WHITEFILLING,GOLDCROWN};
     
-    public void addAdd_RemoveActionListener(ActionListener add, ActionListener remove) {
-        addTreatmentCombo.addActionListener(add);
-        removeTreatmentCombo.addActionListener(remove);
+    public void addAdd_Remove_UpdateActionListener(ActionListener add, ActionListener remove,ActionListener update) {
+        addTreatmentButton.addActionListener(add);
+        removeTreatmentButton.addActionListener(remove);
+        updateRecord.addActionListener(update);
+    }
+    
+     public void clearAll() {
+        addTreatmentCombo.removeAllItems();
+        removeTreatmentCombo.removeAllItems();
+        treatmentListLabel.setText("");
+        patientNameCombo.removeAllItems();
+        lastConsulationDateLabel.setText("");
+        notCompleted.setSelected(false);
+        completed.setSelected(false);
     }
     
     public void updatePatientNames(Patient[] patients,Partner partner) {
@@ -288,19 +348,19 @@ public class AddTreatmentPanel extends javax.swing.JPanel {
         return currentTreatment[removeTreatmentCombo.getSelectedIndex()];
     }
     
-    public void clearAll() {
-        addTreatmentCombo.removeAllItems();
-        removeTreatmentCombo.removeAllItems();
-        treatmentListLabel.setText("");
-        patientNameCombo.removeAllItems();
-        lastConsulationDateLabel.setText("");
-    }
-
     /**
      * @return the currentPatients
      */
     public Patient getCurrentPatient() {
         return currentPatients[patientNameCombo.getSelectedIndex()];
+    }
+    
+    /**
+     * @return the currentAppointment
+     */
+    public Appointment getCurrentAppointment() {
+        Patient p = currentPatients[patientNameCombo.getSelectedIndex()];
+        return p.lastAppointment(currentPartner);
     }
     
 }

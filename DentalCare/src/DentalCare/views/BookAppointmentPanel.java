@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import DentalCare.model.Patient;
 import DentalCare.model.Treatment;
+import DentalCare.model.TreatmentType;
 import java.time.LocalDate;
 import javax.swing.JList;
 
@@ -214,12 +215,11 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
     //More variables
     private Patient[] currentPatients;
     
-    final private Treatment HYGIENE = new Treatment("hygiene",45,20);
-    final private Treatment CHECKUP = new Treatment("Check - UP",45,20);
-    final private Treatment SILVERFILLING = new Treatment("Silver amalgam filling",90,60);
-    final private Treatment WHITEFILLING = new Treatment("White composite resin filling",150,60);
-    final private Treatment GOLDCROWN = new Treatment("Gold crown",500,60);
-    
+    final private Treatment HYGIENE = new Treatment("hygiene",TreatmentType.HYGIENE,45,20);
+    final private Treatment CHECKUP = new Treatment("Check - UP",TreatmentType.CHECKUP,45,20);
+    final private Treatment SILVERFILLING = new Treatment("Silver amalgam filling",TreatmentType.REPAIR,90,60);
+    final private Treatment WHITEFILLING = new Treatment("White composite resin filling",TreatmentType.REPAIR,150,60);
+    final private Treatment GOLDCROWN = new Treatment("Gold crown",TreatmentType.COSMETIC,500,60);
     final private Treatment[] listOfTreatments = {HYGIENE,CHECKUP,SILVERFILLING,WHITEFILLING,GOLDCROWN};
     /**
      * @return the endTime
@@ -258,9 +258,10 @@ public class BookAppointmentPanel extends javax.swing.JPanel {
     public Treatment[] getTreatments() {
         int[] treatmentIndices = treatments.getSelectedIndices();
         Treatment[] treatmentList = new Treatment[treatmentIndices.length];
-        for(int i : treatmentIndices) {
-            //treatmentList[i] = listOfTreatments[i];
-            System.out.print(i);
+        for(int j= 0; j<treatmentIndices.length; j++) {
+            for(int i : treatmentIndices) {
+                treatmentList[j] = listOfTreatments[i];
+            }
         }
         return treatmentList;
     }

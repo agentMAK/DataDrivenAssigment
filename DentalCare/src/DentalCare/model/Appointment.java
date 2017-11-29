@@ -26,33 +26,53 @@ public class Appointment {
     // Default time for appointment is an hour
     private final long DEFAULTDURATION = 3600;
     
+    //Constants
+    private final LocalTime OPENINGTIME = LocalTime.of(9,0);
+    private final LocalTime CLOSINGTIME = LocalTime.of(17,0);;
     
     
-    public Appointment(Treatment[] treatments, Partner partner, String fullName, LocalDate date, LocalTime startTime, LocalTime endTime) {
+    // Used when creating a brand new appointment
+    public Appointment(Treatment[] treatments, Partner partner, 
+            String fullName, LocalDate date, LocalTime startTime, LocalTime endTime)  throws IncorrectInputException{
         this.treatments = treatments;
         this.partner = partner;
-        this.fullName = fullName;
+        this.fullName = fullName;     
         this.date = date;
+        
         this.startTime = startTime;
+        checkTime(startTime);
+        
         if(endTime == null) 
             calculateEndTime();
         else
+            checkTime(endTime);
             this.endTime = endTime;   
+            
+        checkCurrentTime(date,startTime);
+        this.isAppointmentCompleted = false;
+    }
+
+    
+    public Appointment(Treatment[] treatments, Partner partner, 
+            String fullName, LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAppointmentCompleted)  throws IncorrectInputException{
+        this(treatments,partner,fullName,date,startTime,endTime);
+        this.isAppointmentCompleted = isAppointmentCompleted;
     }
     
-    //Method
-    private void calculateEndTime(){
+    //MethodLocalTime endTime = calculateEndTime(startTime,treatments);
+    private void calculateEndTime() throws IncorrectInputException{
         long durationSeconds = 0;
-        if (treatments == null)
-            this.endTime = startTime.plusSeconds(DEFAULTDURATION);
+        System.out.print("Here : "+treatments.length);
+        if (treatments == null) {
+            this.endTime = startTime.plusSeconds(DEFAULTDURATION); 
         
-        else {
+        } else {
             
             for(Treatment t: treatments) {
                 //durationSeconds += t.getDurationSeconds();
-                System.out.print("A treatment");
             }
             this.endTime = startTime.plusSeconds(durationSeconds);
+            checkTime(this.endTime);
         }
         
     }
@@ -78,13 +98,6 @@ public class Appointment {
     }
 
     /**
-     * @param partner the partner to set
-     */
-    public void setPartner(Partner partner) {
-        this.partner = partner;
-    }
-
-    /**
      * @return the startTime
      */
     public LocalTime getStartTime() {
@@ -96,13 +109,6 @@ public class Appointment {
      */
     public LocalTime getEndTime() {
         return endTime;
-    }
-
-    /**
-     * @param endTime the endTime to set
-     */
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
     }
 
     /**
@@ -122,28 +128,32 @@ public class Appointment {
     public LocalDate getDate() {
         return date;
     }
-
-    /**
-     * @param startTime the startTime to set
-     */
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
     /**
      * @return the isAppointmentCompleted
      */
-    public boolean isIsAppointmentCompleted() {
+    public boolean getAppointmentCompleted() {
         return isAppointmentCompleted;
     }
-
+    
     /**
-     * @param isAppointmentCompleted the isAppointmentCompleted to set
+     * Checks that time is within opening times
+     * @param t a time to check
+     * @throws DentalCare.model.IncorrectInputException
      */
-    public void setIsAppointmentCompleted(boolean isAppointmentCompleted) {
-        this.isAppointmentCompleted = isAppointmentCompleted;
+    public void checkTime(LocalTime t) throws IncorrectInputException{
+        if(t.isBefore(OPENINGTIME) || t.isAfter(CLOSINGTIME))
+            throw(new IncorrectInputException());
     }
     
+    public void checkCurrentTime(LocalDate d,LocalTime t) throws IncorrectInputException{
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime current = LocalDateTime.of(d,t);
+        
+        if(current.isBefore(now))
+            throw(new IncorrectInputException());
+    }
     
-    
+    public void markAsCompleted() {
+        isAppointmentCompleted = true;
+    }
 }
