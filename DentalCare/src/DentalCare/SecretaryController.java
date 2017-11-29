@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import DentalCare.model.Appointment;
 import DentalCare.model.Partner;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -654,9 +655,7 @@ public class SecretaryController extends javax.swing.JFrame {
                         Appointment appointment = cancelAppointmentForm.getAppointmentComboBox();
                        
                         
-                        //Methods here to cancel the appointment from the database
-                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-                   
+                        Queries.deleteAppointment(appointment);                  
                      JOptionPane.showMessageDialog(null, "Appointment Cancelled");
                      
                     }catch(NumberFormatException | NullPointerException el) {
@@ -671,7 +670,8 @@ public class SecretaryController extends javax.swing.JFrame {
                 receiptPanelLower.addPaidActionListener((ActionEvent e) -> {
                     try {
                             
-                        // Set all treatment that has not been paid, but the appointment has been completed to PAID
+                        //Queries.setTreatmentPaid();
+                        
                    
                      JOptionPane.showMessageDialog(null, "Treatments have been marked as Paid");
                      receiptPanelLower.clearAll();
@@ -680,7 +680,8 @@ public class SecretaryController extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE); 
                     }
                 });
-                 
+                 //Error Code: 1175. You are using safe update mode and you tried to update a table without a WHERE that uses a KEY column To disable safe mode, toggle the option in Preferences -> SQL Editor and reconnect.
+
             }
             
             

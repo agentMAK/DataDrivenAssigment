@@ -149,7 +149,7 @@ public class CalendarDayView extends javax.swing.JPanel {
             patientPanel.setBackground(new java.awt.Color(237, 250, 250));
             patientPanel.setLayout(new java.awt.BorderLayout());
 
-            patient.setText(app.getFullName());
+            //patient.setText(app.getFullName());
             patient.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 7, 1, 1));
             patientPanel.add(patient, java.awt.BorderLayout.PAGE_START);
 

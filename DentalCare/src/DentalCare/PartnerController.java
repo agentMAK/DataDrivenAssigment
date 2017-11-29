@@ -5,6 +5,7 @@
  */
 package DentalCare;
 
+import DentalCare.SQL.Queries;
 import DentalCare.model.Address;
 import DentalCare.model.Appointment;
 import DentalCare.model.HealthCarePlan;
@@ -18,6 +19,8 @@ import java.awt.event.ItemEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -58,7 +61,7 @@ public class PartnerController extends javax.swing.JFrame {
         searchPatientDentist = new DentalCare.views.SearchPatientPanel();
         addTreatmentDentist = new DentalCare.views.AddTreatmentPanel();
         hygienistPanel = new javax.swing.JTabbedPane();
-        hygienstCalendar = new DentalCare.views.CalendarDayView();
+        hygienistCalendar = new DentalCare.views.CalendarDayView();
         addTreatmentHygienistMain = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -122,7 +125,7 @@ public class PartnerController extends javax.swing.JFrame {
                 hygienistPanelStateChanged(evt);
             }
         });
-        hygienistPanel.addTab("Calendar", hygienstCalendar);
+        hygienistPanel.addTab("tab2", hygienistCalendar);
 
         addTreatmentHygienistMain.setLayout(new java.awt.BorderLayout());
 
@@ -160,7 +163,7 @@ public class PartnerController extends javax.swing.JFrame {
 
         mainTabbedPanel.addTab("Hygienist", hygienistPanel);
 
-        getContentPane().add(mainTabbedPanel, java.awt.BorderLayout.CENTER);
+        getContentPane().add(mainTabbedPanel, java.awt.BorderLayout.PAGE_START);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -220,8 +223,8 @@ public class PartnerController extends javax.swing.JFrame {
     private javax.swing.JPanel addTreatmentHygienistMain;
     private DentalCare.views.CalendarDayView dentistCalendar;
     private javax.swing.JTabbedPane dentistPanel;
+    private DentalCare.views.CalendarDayView hygienistCalendar;
     private javax.swing.JTabbedPane hygienistPanel;
-    private DentalCare.views.CalendarDayView hygienstCalendar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
@@ -240,27 +243,44 @@ public class PartnerController extends javax.swing.JFrame {
     private void addDentistCalendarPanelListener() {
                 
                 dentistCalendar.addChangeDayListener((ActionEvent e) -> {
-                    // Get list of appointments for both Dentist and Hygienist
-                    //dentistCalendar.addAppointmentArray(dentistAppointments)
-                    currentDay.minusDays(1);  
+                    
+                    try {
+                        currentDay.minusDays(1);
+                        dentistCalendar.addAppointmentArray((Queries.getAppointmentsbyDay(Partner.DENTIST, currentDay.toLocalDate())));
+                    } catch (IncorrectInputException ex) {
+                        Logger.getLogger(PartnerController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }, (ActionEvent e) -> {
-                    // Get list of appointments for Dentist with changed week
-                    //dentistCalendar.addAppointmentArray(dentistAppointments)
-                    currentDay.plusDays(1);
+                    try {
+                        // Get list of appointments for Dentist with changed week
+                        //dentistCalendar.addAppointmentArray(dentistAppointments)
+                        currentDay.plusDays(1);
+                        dentistCalendar.addAppointmentArray((Queries.getAppointmentsbyDay(Partner.DENTIST, currentDay.toLocalDate())));
+                    } catch (IncorrectInputException ex) {
+                        Logger.getLogger(PartnerController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 });
                  
             }
 
     private void addHygienistCalendarPanelListener() {
                 
-                hygienstCalendar.addChangeDayListener((ActionEvent e) -> {
-                    // Get list of appointments for both Dentist and Hygienist
-                    //dentistCalendar.addAppointmentArray(dentistAppointments)
-                    currentDay.minusDays(1);  
+                hygienistCalendar.addChangeDayListener((ActionEvent e) -> {
+                    
+                    try {
+                        currentDay.minusDays(1);
+                        hygienistCalendar.addAppointmentArray((Queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay.toLocalDate())));
+                    } catch (IncorrectInputException ex) {
+                        
+                    }
                 }, (ActionEvent e) -> {
-                    // Get list of appointments for Dentist with changed week
-                    //dentistCalendar.addAppointmentArray(dentistAppointments)
-                    currentDay.plusDays(1);
+                    try {
+                        // Get list of appointments for Dentist with changed week
+                        //dentistCalendar.addAppointmentArray(dentistAppointments)
+                        currentDay.plusDays(1);
+                        hygienistCalendar.addAppointmentArray((Queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay.toLocalDate())));
+                    } catch (IncorrectInputException ex) {
+                    }
                 });
                  
             }
@@ -274,11 +294,9 @@ public class PartnerController extends javax.swing.JFrame {
                         LocalDate dateOfBirth = searchPatientDentist.getDateOfBirth();
                         int houseNumber = searchPatientDentist.getHouseNumber();
                         String postCode = searchPatientDentist.getPostCode();
-                        
-                        /// Missing impliementation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-                        //Method here should turn an array of patient object
-                        Patient[] patients = null;
-                        addTreatmentDentist.updatePatientNames(patientExamples, Partner.DENTIST);
+                   
+                        Patient[] patients = Queries.getPatients(dateOfBirth, houseNumber, postCode);
+                        addTreatmentDentist.updatePatientNames(patients, Partner.DENTIST);
                         
                         JOptionPane.showMessageDialog(null, "View results on patient dropbox","Search complete", JOptionPane.INFORMATION_MESSAGE);
                         
@@ -296,11 +314,9 @@ public class PartnerController extends javax.swing.JFrame {
                         LocalDate dateOfBirth = searchPatientHygienist.getDateOfBirth();
                         int houseNumber = searchPatientHygienist.getHouseNumber();
                         String postCode = searchPatientHygienist.getPostCode();
-                        
-                        /// Missing impliementation !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-                        //Method here should turn an array of patient object
-                        Patient[] patients = null;
-                        addTreatmentHygienist.updatePatientNames(patientExamples, Partner.HYGIENIST);
+                   
+                        Patient[] patients = Queries.getPatients(dateOfBirth, houseNumber, postCode);
+                        addTreatmentHygienist.updatePatientNames(patients, Partner.HYGIENIST);
                         
                         JOptionPane.showMessageDialog(null, "View results on patient dropbox","Search complete", JOptionPane.INFORMATION_MESSAGE);
                         
@@ -317,17 +333,17 @@ public class PartnerController extends javax.swing.JFrame {
                 
                 addTreatmentDentist.addAdd_Remove_UpdateActionListener((ActionEvent e) -> {
                     Treatment treatment = addTreatmentDentist.getTreatmentCombo();
-                    Appointment appointment = addTreatmentDentist.getCurrentAppointment();
-                    // Add treatment to appointment
                     
+                    Appointment appointment = addTreatmentDentist.getCurrentAppointment();
+                    Queries.addTreatmentToAppointment(appointment, treatment);
                 }, (ActionEvent e) -> {
                     Treatment treatment = addTreatmentDentist.getTreatmentCombo();
                     Appointment appointment = addTreatmentDentist.getCurrentAppointment();
-                    // Remove Treatment
+                    Queries.removeTreatmentFromAppointment(appointment, treatment);
                     
                 }, (ActionEvent e) -> {
                     Appointment appointment = addTreatmentDentist.getCurrentAppointment();
-                    // Update the appointment as completed
+                    Queries.setAppointmentComplete(appointment);
                 }); 
             }
     
@@ -337,15 +353,15 @@ public class PartnerController extends javax.swing.JFrame {
                     Treatment treatment = addTreatmentHygienist.getTreatmentCombo();
                     Appointment appointment = addTreatmentHygienist.getCurrentAppointment();
                     // Add treatment to appointment 
-                    
+                    Queries.addTreatmentToAppointment(appointment, treatment);
                 }, (ActionEvent e) -> {
                     Treatment treatment = addTreatmentHygienist.getTreatmentCombo();
                     Appointment appointment = addTreatmentHygienist.getCurrentAppointment();
-                    // Remove Treatment
+                    Queries.removeTreatmentFromAppointment(appointment, treatment);
                     
                 }, (ActionEvent e) -> {
                     Appointment appointment = addTreatmentDentist.getCurrentAppointment();
-                    // Update the appointment as completed
+                    Queries.setAppointmentComplete(appointment);
                 }); 
                  
             }
