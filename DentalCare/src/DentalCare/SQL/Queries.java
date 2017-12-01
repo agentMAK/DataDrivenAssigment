@@ -60,18 +60,19 @@ public class Queries {
 
         Connection con = null;
         PreparedStatement pst = null;
-
+        int addressID = addAddress(p.getAddress());
         try {
 
             con = DriverManager.getConnection(url, user, password);
             
-            pst = con.prepareStatement("INSERT INTO Patients(forename,surname,phone,title,dob,address) VALUES(?,?,?,?,?,1)");
+            pst = con.prepareStatement("INSERT INTO Patients(forename,surname,phone,title,dob,address) VALUES(?,?,?,?,?,?)");
             pst.setString(1, p.getForename());
             pst.setString(2, p.getSurname());
             pst.setString(3, p.getTitle());
             pst.setString(4,Integer.toString(p.getContactNumber()));
             String dob = p.getDateOfBirth().format(formatterDate);
             pst.setString(5, dob);
+            pst.setString(6, Integer.toString(addressID));
             
             pst.executeUpdate();
         } finally {
@@ -84,6 +85,97 @@ public class Queries {
                     con.close();
                 }
         }
+    }
+    
+    public int addAddress(Address a) {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+
+        try {
+
+            
+            con = DriverManager.getConnection(url, user, password);
+
+            pst = con.prepareStatement("INSERT INTO address(`housenumber`,`street`,`district`,`city`,`postcode`) VALUES(?,?,?,?,?)");
+            pst.setString(1, Integer.toString(a.getHouseNumber()));
+            pst.setString(2, a.getStreet());
+            pst.setString(3,a.getDistrict());
+            pst.setString(4,a.getCity());
+            pst.setString(5,a.getPostCode());
+            pst.executeUpdate();
+
+        } catch (SQLException ex) {
+            
+            Logger lgr = Logger.getLogger(Queries.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
+
+        } finally {
+
+            try {
+                
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (SQLException ex) {
+                
+                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return getLastID();
+    }
+    
+        public int getLastID() {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        HealthCarePlan healthplan = null;
+        int lastID = 0;
+        try {
+            
+            con = DriverManager.getConnection(url, user, password);
+            pst = con.prepareStatement("SELECT last_insert_id()");
+            
+            rs = pst.executeQuery();
+            
+            while (rs.next()) 
+                lastID = rs.getInt("last_insert_id()");
+                   
+            
+            
+
+        } catch (SQLException ex) {
+            
+               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+
+        } finally {
+
+            try {
+            
+                if (rs != null) {
+                    rs.close();
+                }
+                
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (SQLException ex) {
+                
+                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return lastID;
     }
     public void addAppointment(Appointment p) throws SQLException{
 
@@ -204,7 +296,6 @@ public class Queries {
                 } catch (IncorrectInputException ex) {
                     Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
                 Treatment[] treatments = getTreatments(appointment);
                 appointments.add(new Appointment(treatments,partner,patientID,date,starttime,endtime,getPatientName(patientID),b));
                
