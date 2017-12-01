@@ -446,6 +446,7 @@ public class SecretaryController extends javax.swing.JFrame {
                             int contactNumber = editPatientLowerPanel.getContactNumber();
                             
                             HealthCarePlan healthPlan = editPatientLowerPanel.getHealthPlan();
+                            LocalDate healthPlanStartDate = editPatientLowerPanel.getHealthPlanStartDate();
                             if(editPatientLowerPanel.isUnsubcribe())
                                 healthPlan = null;
                             
@@ -454,7 +455,7 @@ public class SecretaryController extends javax.swing.JFrame {
                             Patient previousPatient = editPatientLowerPanel.getCurrentPatient();
                             int previousPatientiD = previousPatient.getiD();
                             
-                            Patient updatePatient = new Patient(patientID,title, forename, surname, address, dateOfBirth, contactNumber, healthPlan,appointments);
+                            Patient updatePatient = new Patient(patientID,title, forename, surname, address, dateOfBirth, contactNumber, healthPlan,appointments,healthPlanStartDate);
                             
                             queries.addPatient(updatePatient);
                             

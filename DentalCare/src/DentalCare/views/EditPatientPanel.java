@@ -345,11 +345,10 @@ public class EditPatientPanel extends javax.swing.JPanel {
     }
     
     // More Variables
-    private final LocalDate now = LocalDate.now();
-    private final HealthCarePlan NHSFREE = new HealthCarePlan("NHS Free Plan",now,2,2,6,0);
-    private final HealthCarePlan MAINTAINANCE = new HealthCarePlan("Maintainance Plan",now,2,2,0,15);
-    private final HealthCarePlan ORAL = new HealthCarePlan("Oral Health Plan",now,4,2,0,21);
-    private final HealthCarePlan DENTAL = new HealthCarePlan("Dental Repair Plan",now,2,2,2,36);
+    private final HealthCarePlan NHSFREE = new HealthCarePlan("NHS Free Plan",2,2,6,0);
+    private final HealthCarePlan MAINTAINANCE = new HealthCarePlan("Maintainance Plan",2,2,0,15);
+    private final HealthCarePlan ORAL = new HealthCarePlan("Oral Health Plan",4,2,0,21);
+    private final HealthCarePlan DENTAL = new HealthCarePlan("Dental Repair Plan",2,2,2,36);
     
     private final HealthCarePlan[] HEALTHPLANS = {null, NHSFREE, MAINTAINANCE, ORAL, DENTAL};
     
@@ -393,6 +392,8 @@ public class EditPatientPanel extends javax.swing.JPanel {
             postCode.setText(p.getAddress().getPostCode());
             contactNumber.setText(String.valueOf(p.getContactNumber()));
             setHealthPlan(p.getPlan());
+            if(p.getPlan() != null)
+                healthPlanStartDate.setDate(p.getHealthPlanStartDate());
 
         
         mainPanel.revalidate();
@@ -433,6 +434,10 @@ public class EditPatientPanel extends javax.swing.JPanel {
         return HEALTHPLANS[healthPlanCombo.getSelectedIndex()];
     }
 
+    public LocalDate getHealthPlanStartDate() {
+        return healthPlanStartDate.getDate();
+    }
+    
     /**
      * @return the postCode
      */
@@ -492,7 +497,6 @@ public class EditPatientPanel extends javax.swing.JPanel {
                     unsubscribe.setVisible(false);
             } else {
                 healthPlanCombo.addItem(healthPlan.getName());
-                healthPlanStartDate.setDate(healthPlan.getStartDate());
                 currentPlan = healthPlan;
                 unsubscribe.setVisible(true);
             }

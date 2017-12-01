@@ -332,10 +332,10 @@ public class NewPatientPanel extends javax.swing.JPanel {
 
     // HealthCarePlan Variables
     private final LocalDate now = LocalDate.now();
-    private final HealthCarePlan NHSFREE = new HealthCarePlan("NHS Free Plan",now,2,2,6,0);
-    private final HealthCarePlan MAINTAINANCE = new HealthCarePlan("Maintainance Plan",now,2,2,0,15);
-    private final HealthCarePlan ORAL = new HealthCarePlan("Oral Health Plan",now,4,2,0,21);
-    private final HealthCarePlan DENTAL = new HealthCarePlan("Dental Repair Plan",now,2,2,2,36);
+    private final HealthCarePlan NHSFREE = new HealthCarePlan("NHS Free Plan",2,2,6,0);
+    private final HealthCarePlan MAINTAINANCE = new HealthCarePlan("Maintainance Plan",2,2,0,15);
+    private final HealthCarePlan ORAL = new HealthCarePlan("Oral Health Plan",4,2,0,21);
+    private final HealthCarePlan DENTAL = new HealthCarePlan("Dental Repair Plan",2,2,2,36);
     
     private final HealthCarePlan[] HEALTHPLANS = {null, NHSFREE, MAINTAINANCE, ORAL, DENTAL};
      

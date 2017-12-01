@@ -65,7 +65,7 @@ public class Queries {
 
             con = DriverManager.getConnection(url, user, password);
             
-            pst = con.prepareStatement("INSERT INTO Patients(forename,surname,phone,title,dob,address) VALUES(?,?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO Patients(forename,surname,phone,title,dob,address,healthplan,healthPlanStartDate) VALUES(?,?,?,?,?,?)");
             pst.setString(1, p.getForename());
             pst.setString(2, p.getSurname());
             pst.setString(3, p.getTitle());
@@ -73,6 +73,9 @@ public class Queries {
             String dob = p.getDateOfBirth().format(formatterDate);
             pst.setString(5, dob);
             pst.setString(6, Integer.toString(addressID));
+            pst.setString(7, p.getPlan().getName());
+            pst.setString(7, LocalDate.now().format(formatterDate));
+            
             
             pst.executeUpdate();
         } finally {
@@ -91,12 +94,13 @@ public class Queries {
 
         Connection con = null;
         PreparedStatement pst = null;
-
+        PreparedStatement pst2 = null;
+        ResultSet rs = null;
+        int lastID = 0;
         try {
 
             
             con = DriverManager.getConnection(url, user, password);
-
             pst = con.prepareStatement("INSERT INTO address(`housenumber`,`street`,`district`,`city`,`postcode`) VALUES(?,?,?,?,?)");
             pst.setString(1, Integer.toString(a.getHouseNumber()));
             pst.setString(2, a.getStreet());
@@ -104,6 +108,10 @@ public class Queries {
             pst.setString(4,a.getCity());
             pst.setString(5,a.getPostCode());
             pst.executeUpdate();
+            pst2 = con.prepareStatement("SELECT last_insert_id()");
+            rs = pst2.executeQuery();
+            rs.next();
+            lastID = rs.getInt(1);
 
         } catch (SQLException ex) {
             
@@ -127,56 +135,9 @@ public class Queries {
                 JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-        return getLastID();
-    }
-    
-        public int getLastID() {
-
-        Connection con = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        HealthCarePlan healthplan = null;
-        int lastID = 0;
-        try {
-            
-            con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("SELECT last_insert_id()");
-            
-            rs = pst.executeQuery();
-            
-            while (rs.next()) 
-                lastID = rs.getInt("last_insert_id()");
-                   
-            
-            
-
-        } catch (SQLException ex) {
-            
-               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
-
-        } finally {
-
-            try {
-            
-                if (rs != null) {
-                    rs.close();
-                }
-                
-                if (pst != null) {
-                    pst.close();
-                }
-                
-                if (con != null) {
-                    con.close();
-                }
-
-            } catch (SQLException ex) {
-                
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
         return lastID;
     }
+    
     public void addAppointment(Appointment p) throws SQLException{
 
         Connection con = null;
@@ -414,7 +375,7 @@ public class Queries {
             while (rs.next()) {
           
                 int patientID = rs.getInt("patientID");
-                patients.add(new Patient(patientID,rs.getString("title"), rs.getString("forename"), rs.getString("surname"),getAddress(patientID), dob, rs.getInt("phone"), getHealthPlan(patientID), null));
+                patients.add(new Patient(patientID,rs.getString("title"), rs.getString("forename"), rs.getString("surname"),getAddress(patientID), dob, rs.getInt("phone"), getHealthPlan(patientID), null,rs.getDate("healthPlanStartDate").toLocalDate()));
                
             }
 

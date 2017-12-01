@@ -21,6 +21,7 @@ public class Patient {
     private LocalDate dateOfBirth;
     private int contactNumber;
     private Address address;
+    private LocalDate healthPlanStartDate;
     private HealthCarePlan plan;
     private Treatment[] pastTreatments;
     private Appointment[] appointments;
@@ -38,12 +39,14 @@ public class Patient {
             updateAppointmentTreatmentForHealthPlan();
             setPastTreatmentList();
         }
+        this.healthPlanStartDate = LocalDate.now();
                
     }
     
-    public Patient(int iD, String title, String forname, String surname, Address address, LocalDate dateOfBirth, int contactNumber, HealthCarePlan plan, Appointment[] appointments){
+    public Patient(int iD, String title, String forname, String surname, Address address, LocalDate dateOfBirth, int contactNumber, HealthCarePlan plan, Appointment[] appointments,LocalDate healthPlanStartDate ){
         this(title,forname,surname,address,dateOfBirth,contactNumber,plan,appointments);
         this.iD = iD;
+        this.healthPlanStartDate = healthPlanStartDate;
     }
     
 // Appointment array must be in ascending order
@@ -102,7 +105,7 @@ public class Patient {
         
         for(Appointment a :appointments) {
             
-            if(a.getDate().isAfter(plan.getStartDate())){
+            if(a.getDate().isAfter(healthPlanStartDate)){
                 
                 for(Treatment t: a.getTreatment()) {
                     
@@ -206,6 +209,13 @@ public class Patient {
      */
     public int getiD() {
         return iD;
+    }
+
+    /**
+     * @return the healthPlanStartDate
+     */
+    public LocalDate getHealthPlanStartDate() {
+        return healthPlanStartDate;
     }
 
 }
