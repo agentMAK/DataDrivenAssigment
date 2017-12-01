@@ -569,7 +569,7 @@ public class SecretaryController extends javax.swing.JFrame {
             private void addBookAppointmentPanelListener() {
                bookAppointmentForm.addSaveActionListener((ActionEvent e) -> {
                     try {
-                        
+
                         Patient patient = bookAppointmentForm.getPatient();
                         String partner = bookAppointmentForm.getPartner().toUpperCase();
                         LocalDate date = bookAppointmentForm.getDate();
@@ -577,7 +577,10 @@ public class SecretaryController extends javax.swing.JFrame {
                         LocalTime endTime = bookAppointmentForm.getEndTime();
                         Treatment[] treatments = bookAppointmentForm.getTreatments();
                        
-                        int patientID = patient.getiD();
+                        int patientID = 0;
+                        if(patient != null)
+                             patientID = patient.getiD();
+                        
                         Appointment appointment =  new Appointment(treatments,Partner.valueOf(partner),patientID,date,startTime,endTime);
                         
                         queries.addAppointment(appointment);
