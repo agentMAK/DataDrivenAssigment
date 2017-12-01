@@ -41,7 +41,7 @@ public class Queries {
     
     private String url = "jdbc:mysql://localhost:3306/mydb";
     private String user = "root";
-    private String password = "1234";
+    private String password = "password";
     private DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
     private DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
@@ -507,13 +507,11 @@ public class Queries {
         Connection con = null;
         PreparedStatement pst = null;
 
-
-        try {
+               try {
 
             
-            con = DriverManager.getConnection(url, user, password);
-
-            pst = con.prepareStatement("delete appointments.* from appointments where appointments.partner = (?) and appointments.starttime = (?) and appointments.date = (?)");
+            con = DriverManager.getConnection(url,user,password);
+            pst = con.prepareStatement("DELETE appointments.* from appointments where appointments.partner = (?) and appointments.starttime = (?) and appointments.date = (?)");
             pst.setString(1, p.getPartner().toString());
             pst.setString(1, p.getStartTime().toString());
             pst.setString(2, p.getDate().toString());
@@ -538,7 +536,7 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error - deleteAppointment", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -631,7 +629,7 @@ public class Queries {
         try {   
             con = DriverManager.getConnection(url, user, password);
 
-            pst = con.prepareStatement("DELETE FROM `mydb`.`appointmentstreatments WHERE appointments.partner = (?) and appointments.date = (?) and appointments.starttime = (?) and treatments.nametreatment = (?)");
+            pst = con.prepareStatement("DELETE appointmentstreatments.* FROM appointmentstreatments, appointments, treatments WHERE appointments.partner = (?) and appointments.date = (?) and appointments.starttime = (?) and appointmentstreatments.idtreatment = (?) and appointments.idappointment = appointmentstreatments.idappointment");
             pst.setString(1, a.getPartner().toString());
             pst.setString(2, a.getDate().toString());
             pst.setString(3, a.getStartTime().toString());
@@ -702,7 +700,6 @@ public class Queries {
             }
         }
     }
-
     public String getPatientName(int PatientID) {
 
         Connection con = null;
