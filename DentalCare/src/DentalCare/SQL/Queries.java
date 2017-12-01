@@ -523,8 +523,7 @@ public class Queries {
             rs = pst.executeQuery();
             
             while (rs.next()) {
-                LocalDate startDate = rs.getDate("startDate").toLocalDate();
-                healthplan = new HealthCarePlan(rs.getString("namehealthplan"),startDate,rs.getInt("hygieneVisits"),rs.getInt("checkupVisits"),rs.getInt("repairVisits"),rs.getInt("cost"));
+                healthplan = new HealthCarePlan(rs.getString("namehealthplan"),rs.getInt("hygieneVisits"),rs.getInt("checkupVisits"),rs.getInt("repairVisits"),rs.getInt("cost"));
             }
 
         } catch (SQLException ex) {
@@ -801,6 +800,39 @@ public class Queries {
             }
         return (title+" "+forename+" "+surname);
         }
+    }
+     public void editPatient(Patient p) throws SQLException{
+
+        Connection con = null;
+        PreparedStatement pst = null;
+
+        try {
+
+            
+            con = DriverManager.getConnection(url, user, password);
+
+            pst = con.prepareStatement("UPDATE patients set forename = (?), surname = (?), title =(?), dob =(?), phone = (?), healthplan = (?) WHERE idpatients = (?); ");
+            pst.setString(1, p.getForename());
+            pst.setString(2,p.getSurname());
+            pst.setString(3,p.getTitle());
+            pst.setString(4, p.getDateOfBirth().format(formatterDate));
+            pst.setString(5,Integer.toString(p.getContactNumber()));
+            pst.setString(6,p.getPlan().getName());
+            //pst.setString(6,"false");
+            pst.executeUpdate();
+
+
+        } finally {
+
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+        }
+
     }
         
 }
