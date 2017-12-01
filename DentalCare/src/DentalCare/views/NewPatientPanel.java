@@ -66,8 +66,8 @@ public class NewPatientPanel extends javax.swing.JPanel {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel1.setText("Register a new patient");
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -103,8 +103,12 @@ public class NewPatientPanel extends javax.swing.JPanel {
         forenameLabel.setText("Forname");
         forenameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
+        forename.setText("Max");
+
         surnameLabel.setText("Surname");
         surnameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        surname.setText("Taylor");
 
         dateOfBirthLabel.setText("Date of Birth");
         dateOfBirthLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -112,6 +116,7 @@ public class NewPatientPanel extends javax.swing.JPanel {
         houseNumberLabel.setText("House Number");
         houseNumberLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
+        street.setText("Spring View");
         street.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 streetActionPerformed(evt);
@@ -121,9 +126,12 @@ public class NewPatientPanel extends javax.swing.JPanel {
         cityLabel.setText("City");
         cityLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
+        city.setText("Sheffiled");
+
         postCodeLabel.setText("Post Code");
         postCodeLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
+        postCode.setText("s12 234");
         postCode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 postCodeActionPerformed(evt);
@@ -133,6 +141,8 @@ public class NewPatientPanel extends javax.swing.JPanel {
         contactNumberLabel.setText("Contact Number");
         contactNumberLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
+        contactNumber.setText("1232423");
+
         HealthPlanLabel.setText("Health Plan");
         HealthPlanLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -140,15 +150,29 @@ public class NewPatientPanel extends javax.swing.JPanel {
 
         save.setText("Save");
 
-        streetLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         streetLabel1.setText("Street");
+        streetLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
-        districtLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        houseNumber.setText("1234");
+        houseNumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                houseNumberActionPerformed(evt);
+            }
+        });
+
         districtLabel.setText("District");
         districtLabel.setBorder(null);
+        districtLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         districtLabel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 districtLabelActionPerformed(evt);
+            }
+        });
+
+        district.setText("Crookesmore");
+        district.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                districtActionPerformed(evt);
             }
         });
 
@@ -265,6 +289,14 @@ public class NewPatientPanel extends javax.swing.JPanel {
     private void districtLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_districtLabelActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_districtLabelActionPerformed
+
+    private void houseNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_houseNumberActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_houseNumberActionPerformed
+
+    private void districtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_districtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_districtActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

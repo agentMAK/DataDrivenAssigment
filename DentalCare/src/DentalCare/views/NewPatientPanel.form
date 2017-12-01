@@ -228,6 +228,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="forename">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Max"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="surnameLabel">
           <Properties>
@@ -238,6 +241,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="surname">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Taylor"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="dateOfBirthLabel">
           <Properties>
@@ -258,6 +264,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="street">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Spring View"/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="streetActionPerformed"/>
           </Events>
@@ -271,6 +280,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="city">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sheffiled"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="postCodeLabel">
           <Properties>
@@ -281,6 +293,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="postCode">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="s12 234"/>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="postCodeActionPerformed"/>
           </Events>
@@ -294,6 +309,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="contactNumber">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="1232423"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="HealthPlanLabel">
           <Properties>
@@ -332,6 +350,12 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="houseNumber">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="1234"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="houseNumberActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="districtLabel">
           <Properties>
@@ -348,6 +372,12 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="district">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Crookesmore"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="districtActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton2">
           <Properties>

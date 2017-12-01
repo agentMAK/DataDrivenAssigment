@@ -6,7 +6,6 @@
 package DentalCare.SQL;
 
 import java.sql.ResultSet;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ import java.time.LocalTime;
  * @author Martin
  */
 
-    import java.sql.Connection;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -34,48 +33,49 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
 import DentalCare.model.TreatmentType;
+import java.sql.Driver;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Enumeration;
 public class Queries {
-    public static void addPatient(Patient p) {
+    
+    private String url = "jdbc:mysql://localhost:3306/mydb";
+    private String user = "root";
+    private String password = "1234";
+    private DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+    private DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    
+    //Take in the database url, username and password
+    public Queries(String url,String user,String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void addPatient(Patient p) throws SQLException {
 
         Connection con = null;
         PreparedStatement pst = null;
-        
-        try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-        } catch (InstantiationException ex) {
-            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String url = "jdbc:mysql://localhost:3306/testdb?useSSL=false";
-        String user = "newuser";
-        String password = "password";
 
         try {
 
-            
-            con = DriverManager.getConnection(url + ";user=root");
+            con = DriverManager.getConnection(url, user, password);
             
             pst = con.prepareStatement("INSERT INTO Patients(forename,surname,phone,title,dob,address) VALUES(?,?,?,?,?,1)");
             pst.setString(1, p.getForename());
             pst.setString(2, p.getSurname());
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd"); 
-            String dob = dateFormat.format(p.getDateOfBirth());
-            pst.setString(3, dob);
-            pst.setString(1,Integer.toString(p.getContactNumber()));
-            pst.executeUpdate();
-
-        } catch (SQLException ex) {
+            pst.setString(3, p.getTitle());
+            pst.setString(4,Integer.toString(p.getContactNumber()));
+            String dob = p.getDateOfBirth().format(formatterDate);
+            pst.setString(5, dob);
             
-            //JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
-
+            pst.executeUpdate();
         } finally {
 
-            try {
-                
                 if (pst != null) {
                     pst.close();
                 }
@@ -83,45 +83,36 @@ public class Queries {
                 if (con != null) {
                     con.close();
                 }
-
-            } catch (SQLException ex) {
-                
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
-    public static void addAppointment(Appointment p) {
+    public void addAppointment(Appointment p) throws SQLException{
 
         Connection con = null;
         PreparedStatement pst = null;
-
-        String url = "jdbc:mysql://localhost:3306/testdb";
-        String user = "root";
-        String password = "password";
 
         try {
 
             
             con = DriverManager.getConnection(url, user, password);
 
-            pst = con.prepareStatement("INSERT INTO appointments(`partner`,`date`,`patient`,`isComplete`) VALUES(?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO appointments(partner,date,starttime,endtime,patient) VALUES(?,?,?,?,?)");
             pst.setString(1, p.getPartner().toString());
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd"); 
-            String dob = dateFormat.format(p.getStartTime());
-            pst.setString(2, dob);
-            pst.setString(3,Integer.toString(p.getPatientID()));
-            pst.setString(4,"false");
+            
+            DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String date = p.getDate().format(formatterDate);
+            String startTime = p.getStartTime().format(formatterTime);
+            String endTime = p.getEndTime().format(formatterTime);
+            
+            pst.setString(2, date);
+            pst.setString(3, startTime);
+            pst.setString(4, endTime);
+            pst.setString(5,Integer.toString(p.getPatientID()));
+            //pst.setString(6,"false");
             pst.executeUpdate();
 
-        } catch (SQLException ex) {
-            
-            Logger lgr = Logger.getLogger(Queries.class.getName());
-            lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
 
-            try {
-                
                 if (pst != null) {
                     pst.close();
                 }
@@ -129,22 +120,15 @@ public class Queries {
                 if (con != null) {
                     con.close();
                 }
-
-            } catch (SQLException ex) {
-                
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
-            }
         }
+
     }
-    public static Appointment[] getAppointments(Partner p,LocalDateTime startdate) throws IncorrectInputException {
+    public Appointment[] getAppointments(Partner p) throws IncorrectInputException {
 
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "root";
-        String password = "password";
         try {
             
             con = DriverManager.getConnection(url, user, password);
@@ -153,11 +137,12 @@ public class Queries {
             rs = pst.executeQuery();
            
             while (rs.next()) {
-                LocalDate date = LocalDate.parse(rs.getString("date"));
-                LocalTime starttime = LocalTime.parse(rs.getString("starttime"));
-                LocalTime endtime = LocalTime.parse(rs.getString("endtime"));
-                int patientID = rs.getInt("patientID");
-                appointments.add(new Appointment(null,p,patientID,date,starttime,endtime));
+                LocalDate date = rs.getDate("date").toLocalDate();
+                LocalTime starttime = rs.getTime("startTime").toLocalTime();
+                LocalTime endtime = rs.getTime("endTime").toLocalTime();
+                int patientID = rs.getInt("patient");
+                boolean isAppointmentCompleted = rs.getBoolean("iscomplete");
+                appointments.add(new Appointment(null,p,patientID,date,starttime,endtime,getPatientName(patientID),isAppointmentCompleted));
                
             }
 
@@ -184,7 +169,8 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
         return appointments.toArray(new Appointment[appointments.size()]);
@@ -195,40 +181,39 @@ public class Queries {
         PreparedStatement pst = null;
         ResultSet rs = null;
         ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "root";
-        String password = "password";
+        
         try {
             
             con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("SELECT * FROM Appointments WHERE  WHERE partner = (?) AND Appointments.date BETWEEN (?) and (?)");
+            pst = con.prepareStatement("SELECT * FROM Appointments WHERE partner = (?) AND Appointments.date BETWEEN (?) and (?)ORDER BY starttime ASC");
             pst.setString(1, p.toString());
-            pst.setString(2, currentweek.toString());
-            pst.setString(3, currentweek.plusWeeks(1).toString());
+            pst.setString(2, currentweek.format(formatterDate));
+            pst.setString(3, currentweek.plusWeeks(1).format(formatterDate));
             rs = pst.executeQuery();
            
             while (rs.next()) {
-                LocalDate date = LocalDate.parse(rs.getString("date"));
-                LocalTime starttime = LocalTime.parse(rs.getString("starttime"));
-                LocalTime endtime = LocalTime.parse(rs.getString("endtime"));
-                int patientID = rs.getInt("patientID");
-                Partner partner = Partner.valueOf(rs.getString("partner"));
+                LocalDate date = rs.getDate("date").toLocalDate();
+                LocalTime starttime = rs.getTime("startTime").toLocalTime();
+                LocalTime endtime = rs.getTime("endTime").toLocalTime();
+                int patientID = rs.getInt("patient");
+                Partner partner = Partner.valueOf(rs.getString("partner").toUpperCase());
                 Boolean b = rs.getBoolean("iscomplete");
                 Appointment appointment = null;
                 try {
-                    appointment =  new Appointment(null,partner,patientID,date,starttime,endtime,b);
+                    appointment =  new Appointment(null,partner,patientID,date,starttime,endtime,getPatientName(patientID),b);
                 } catch (IncorrectInputException ex) {
                     Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 Treatment[] treatments = getTreatments(appointment);
-                appointments.add(new Appointment(treatments,partner,patientID,date,starttime,endtime,b));
+                appointments.add(new Appointment(treatments,partner,patientID,date,starttime,endtime,getPatientName(patientID),b));
                
             }
 
         } catch (SQLException ex) {
             
-               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+               Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
 
@@ -248,20 +233,19 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
         return appointments.toArray(new Appointment[appointments.size()]);
     }
-    public static Appointment[] getAppointmentsbyDay(Partner p, LocalDate currentDay) throws IncorrectInputException {
+    public Appointment[] getAppointmentsbyDay(Partner p, LocalDate currentDay) throws IncorrectInputException {
 
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "root";
-        String password = "password";
+
         try {
             
             con = DriverManager.getConnection(url, user, password);
@@ -279,19 +263,20 @@ public class Queries {
                 Boolean b = rs.getBoolean("iscomplete");
                 Appointment appointment = null;
                 try {
-                    appointment =  new Appointment(null,partner,patientID,date,starttime,endtime,b);
+                    appointment =  new Appointment(null,partner,patientID,date,starttime,endtime,getPatientName(patientID),b);
                 } catch (IncorrectInputException ex) {
                     Logger.getLogger(Queries.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
                 Treatment[] treatments = getTreatments(appointment);
-                appointments.add(new Appointment(treatments,partner,patientID,date,starttime,endtime,b));
+                appointments.add(new Appointment(treatments,partner,patientID,date,starttime,endtime,getPatientName(patientID),b));
                
             }
 
         } catch (SQLException ex) {
             
-               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+               Logger lgr = Logger.getLogger(Queries.class.getName());
+               lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
 
@@ -311,25 +296,26 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
         return appointments.toArray(new Appointment[appointments.size()]);
     }
-    public static Patient[] getPatients(LocalDate dob, int housenumber, String postcode) {
+    public Patient[] getPatients(LocalDate dob, int housenumber, String postcode) {
 
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         ArrayList<Patient> patients = new ArrayList<Patient>();
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "root";
-        String password = "password";
+
         try {
             
             con = DriverManager.getConnection(url, user, password);
             pst = con.prepareStatement("SELECT patients.* FROM patients,address WHERE dob = (?) AND patients.address = address.idaddress AND address.postCode = (?) AND address.houseNumber = (?)");
-            pst.setString(1, dob.toString());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String dobString = dob.format(formatter);
+            pst.setString(1, dobString);
             pst.setString(2,postcode);
             pst.setString(3, Integer.toString(housenumber));
             rs = pst.executeQuery();
@@ -343,7 +329,8 @@ public class Queries {
 
         } catch (SQLException ex) {
             
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
 
@@ -363,27 +350,26 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+               Logger lgr = Logger.getLogger(Queries.class.getName());
+               lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
         return patients.toArray(new Patient[patients.size()]);
     }
-    public static Treatment[] getTreatments(Appointment appointment) {
+    public Treatment[] getTreatments(Appointment appointment) {
 
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         ArrayList<Treatment> treatments = new ArrayList<Treatment>();
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "root";
-        String password = "password";
+
         try {
             
             con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("select treatments.* from treatments, appointments, appointmentstreatments where treatments.nametreatment = appointmentstreatments.idtreatment AND appointments.idappointment = appointmentstreatments.idappointment AND appointments.starttime = (?) AND appointments.partner = (?) AND appointments.date = (?)");
-            pst.setString(1, appointment.getStartTime().toString());
+            pst = con.prepareStatement("SELECT treatments.* FROM treatments, appointments, appointmentstreatments WHERE treatments.nametreatment = appointmentstreatments.idtreatment AND appointments.idappointment = appointmentstreatments.idappointment AND appointments.starttime = (?) AND appointments.partner = (?) AND appointments.date = (?)");
+            pst.setString(1, appointment.getStartTime().format(formatterTime));
             pst.setString(2, appointment.getPartner().toString());
-            pst.setString(3, appointment.getDate().toString());
+            pst.setString(3, appointment.getDate().format(formatterDate));
             rs = pst.executeQuery();
            
             while (rs.next()) {
@@ -419,32 +405,33 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+               Logger lgr = Logger.getLogger(Queries.class.getName());
+               lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
         return treatments.toArray(new Treatment[treatments.size()]);
     }
-    public static Address getAddress(int patientID) {
+    public Address getAddress(int patientID) {
 
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         Address address = null;
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "root";
-        String password = "password";
+
         try {
             
             con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("select address.* from patients, address where patients.idpatients = (?) and patients.address = address.idaddress;");
+            pst = con.prepareStatement("SELECT address.* FROM patients, address WHERE patients.patientID = (?) AND patients.address = address.idaddress");
             pst.setString(1,Integer.toString(patientID));
             rs = pst.executeQuery();
-            address = new Address(rs.getInt("housenumber"),rs.getString("street"),rs.getString("district"),rs.getString("city"),rs.getString("postcode"));
+            while (rs.next()) {
+                address = new Address(rs.getInt("houseNumber"),rs.getString("street"),rs.getString("district"),rs.getString("city"),rs.getString("postCode"));
+             }
             
 
         } catch (SQLException ex) {
             
-               JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+               //JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
 
         } finally {
 
@@ -469,26 +456,24 @@ public class Queries {
         }
         return address;
     }
-    public static HealthCarePlan getHealthPlan(int patientID) {
+    public HealthCarePlan getHealthPlan(int patientID) {
 
         Connection con = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
         HealthCarePlan healthplan = null;
-        String url = "jdbc:mysql://localhost:3306/mydb";
-        String user = "root";
-        String password = "password";
+
         try {
             
             con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("select healthplan.* from patients, healthplan where patients.idpatient = (?) and patients.healthplan = healthplan.idhealthplan;");
+            pst = con.prepareStatement("SELECT healthplan.* FROM patients, healthplan WHERE patients.patientID = (?) AND patients.healthplan = healthplan.namehealthplan");
             pst.setString(1,Integer.toString(patientID));
             rs = pst.executeQuery();
-            LocalDate date = LocalDate.parse(rs.getString("startdate"));
-
             
-            healthplan = new HealthCarePlan(rs.getString("name"),date,rs.getInt("hygenevisits"),rs.getInt("checkups"),rs.getInt("repairvisits"),rs.getInt("cost"));
-            
+            while (rs.next()) {
+                LocalDate startDate = rs.getDate("startDate").toLocalDate();
+                healthplan = new HealthCarePlan(rs.getString("namehealthplan"),startDate,rs.getInt("hygieneVisits"),rs.getInt("checkupVisits"),rs.getInt("repairVisits"),rs.getInt("cost"));
+            }
 
         } catch (SQLException ex) {
             
@@ -517,14 +502,11 @@ public class Queries {
         }
         return healthplan;
     }
-    public static void deleteAppointment(Appointment p) {
+    public void deleteAppointment(Appointment p) {
 
         Connection con = null;
         PreparedStatement pst = null;
 
-        String url = "jdbc:mysql://localhost:3306/testdb";
-        String user = "root";
-        String password = "password";
 
         try {
 
@@ -560,14 +542,11 @@ public class Queries {
             }
         }
     }
-    public static void setTreatmentPaid(Patient p) {
+    public void setTreatmentPaid(Patient p) {
 
         Connection con = null;
         PreparedStatement pst = null;
 
-        String url = "jdbc:mysql://localhost:3306/testdb";
-        String user = "root";
-        String password = "password";
 
         try {
 
@@ -597,18 +576,15 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+               Logger lgr = Logger.getLogger(Queries.class.getName());
+               lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
     }
-    public static void addTreatmentToAppointment(Appointment a, Treatment t) {
+    public void addTreatmentToAppointment(Appointment a, Treatment t) {
 
         Connection con = null;
         PreparedStatement pst = null;
-
-        String url = "jdbc:mysql://localhost:3306/testdb";
-        String user = "root";
-        String password = "password";
 
         try {
 
@@ -624,7 +600,8 @@ public class Queries {
 
         } catch (SQLException ex) {
             
-            JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+            Logger lgr = Logger.getLogger(Queries.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
 
@@ -640,22 +617,18 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
     }
-    public static void removeTreatmentFromAppointment(Appointment a, Treatment t) {
+    public void removeTreatmentFromAppointment(Appointment a, Treatment t) {
 
         Connection con = null;
         PreparedStatement pst = null;
 
-        String url = "jdbc:mysql://localhost:3306/testdb";
-        String user = "root";
-        String password = "password";
 
-        try {
-
-            
+        try {   
             con = DriverManager.getConnection(url, user, password);
 
             pst = con.prepareStatement("DELETE FROM `mydb`.`appointmentstreatments WHERE appointments.partner = (?) and appointments.date = (?) and appointments.starttime = (?) and treatments.nametreatment = (?)");
@@ -667,7 +640,8 @@ public class Queries {
 
         } catch (SQLException ex) {
             
-            JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+            Logger lgr = Logger.getLogger(Queries.class.getName());
+            lgr.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
 
@@ -683,18 +657,15 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
     }
-    public static void setAppointmentComplete(Appointment a) {
+    public void setAppointmentComplete(Appointment a) {
 
         Connection con = null;
         PreparedStatement pst = null;
-
-        String url = "jdbc:mysql://localhost:3306/testdb";
-        String user = "root";
-        String password = "password";
 
         try {
 
@@ -726,8 +697,61 @@ public class Queries {
 
             } catch (SQLException ex) {
                 
-                JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
     }
+
+    public String getPatientName(int PatientID) {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<Treatment> treatments = new ArrayList<Treatment>();
+        String title = null,forename = null,surname = null;
+
+        try {
+            
+            con = DriverManager.getConnection(url, user, password);
+            pst = con.prepareStatement("SELECT * FROM patients WHERE patientID = ?");
+            pst.setString(1,Integer.toString(PatientID));
+            rs = pst.executeQuery();
+           
+            while (rs.next()) {
+                title = rs.getString("title");
+                forename = rs.getString("forename");
+                surname = rs.getString("surname");   
+            }
+
+        } catch (SQLException ex) {
+            
+               Logger lgr = Logger.getLogger(Queries.class.getName());
+               lgr.log(Level.SEVERE, ex.getMessage(), ex);
+
+        } finally {
+
+            try {
+            
+                if (rs != null) {
+                    rs.close();
+                }
+                
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (SQLException ex) {
+                
+               Logger lgr = Logger.getLogger(Queries.class.getName());
+               lgr.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        return (title+" "+forename+" "+surname);
+        }
     }
+        
+}

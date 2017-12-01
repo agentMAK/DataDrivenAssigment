@@ -22,6 +22,7 @@ public class Appointment {
     private LocalTime startTime;
     private LocalTime endTime;
     private int patientID;
+    private String fullName;
     private boolean isAppointmentCompleted = false;
     // Default time for appointment is an hour
     private final long DEFAULTDURATION = 3600;
@@ -44,9 +45,10 @@ public class Appointment {
         
         if(endTime == null) 
             calculateEndTime();
-        else
+        else {
             checkTime(endTime);
-            this.endTime = endTime;   
+            this.endTime = endTime;
+        }
             
         checkCurrentTime(date,startTime);
         this.isAppointmentCompleted = false;
@@ -54,22 +56,27 @@ public class Appointment {
 
     
     public Appointment(Treatment[] treatments, Partner partner, 
-            int patientID, LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAppointmentCompleted)  throws IncorrectInputException{
-        this(treatments,partner,patientID,date,startTime,endTime);
+            int patientID, LocalDate date, LocalTime startTime, LocalTime endTime,String fullName, boolean isAppointmentCompleted)  throws IncorrectInputException{
+        this.treatments = treatments;
+        this.partner = partner;
+        this.patientID = patientID;     
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.fullName = fullName;
         this.isAppointmentCompleted = isAppointmentCompleted;
     }
-    
+
     //MethodLocalTime endTime = calculateEndTime(startTime,treatments);
     private void calculateEndTime() throws IncorrectInputException{
         long durationSeconds = 0;
-        System.out.print("Here : "+treatments.length);
         if (treatments == null) {
             this.endTime = startTime.plusSeconds(DEFAULTDURATION); 
         
         } else {
             
             for(Treatment t: treatments) {
-                //durationSeconds += t.getDurationSeconds();
+                durationSeconds += t.getDurationSeconds();
             }
             this.endTime = startTime.plusSeconds(durationSeconds);
             checkTime(this.endTime);
@@ -155,5 +162,12 @@ public class Appointment {
     
     public void markAsCompleted() {
         isAppointmentCompleted = true;
+    }
+
+    /**
+     * @return the fullName
+     */
+    public String getFullName() {
+        return fullName;
     }
 }

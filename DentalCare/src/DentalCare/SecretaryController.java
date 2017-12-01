@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import DentalCare.model.Appointment;
 import DentalCare.model.Partner;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -31,12 +32,21 @@ import javax.swing.JOptionPane;
  */
 public class SecretaryController extends javax.swing.JFrame {
 
+    private Queries queries;
     /**
      * Creates new form SecretaryController
      */
     public SecretaryController() {
         initComponents();
-        combine();
+        queries = new Queries("jdbc:mysql://localhost:3306/mydb","root","1234");
+        LocalDateTime now = LocalDateTime.now();
+        currentWeek = now.with(DayOfWeek.MONDAY);
+        try {
+            dentistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.DENTIST,currentWeek));
+            hygienistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.HYGIENIST,currentWeek)); 
+        } catch (IncorrectInputException ex) {
+            Logger.getLogger(SecretaryController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         addNewPatientPanelListener();
         addDentistCalendarPanelListener();
         addHygienistCalendarPanelListener();
@@ -45,6 +55,7 @@ public class SecretaryController extends javax.swing.JFrame {
         addCancelAppointmentListener();
         addEditPatientPanelListener();
         addReceiptAppointmentListener();
+        
     }
 
     /**
@@ -331,16 +342,12 @@ public class SecretaryController extends javax.swing.JFrame {
         try {
             CardLayout cl = (CardLayout)(mainPanel.getLayout());
             cl.show(mainPanel, "calendars" );
-            
-            dentistCalendar.addAppointmentArray(Queries.getAppointments(Partner.DENTIST,currentWeek));
-            hygienistCalendar.addAppointmentArray(Queries.getAppointments(Partner.HYGIENIST,currentWeek));
-            
-            // Get list of appointments for both Dentist and Hygienist
-            //dentistCalendar.addAppointmentArray(dentistAppointments)
-            //hygienistCalendar.addAppointmentArray(hygienistAppointments)
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
             LocalDateTime now = LocalDateTime.now();
             currentWeek = now.with(DayOfWeek.MONDAY);
+            dentistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.DENTIST,currentWeek));
+            hygienistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.HYGIENIST,currentWeek));
+            
+            
         } catch (IncorrectInputException ex) {
             Logger.getLogger(SecretaryController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -353,7 +360,6 @@ public class SecretaryController extends javax.swing.JFrame {
     private void bookAppointmentMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookAppointmentMenuActionPerformed
         CardLayout cl = (CardLayout)(mainPanel.getLayout());
         cl.show(mainPanel, "bookAppointment" );
-        // THIS WILL GET REMOVED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
         bookAppointmentForm.clearPatientName();
     }//GEN-LAST:event_bookAppointmentMenuActionPerformed
 
@@ -409,11 +415,11 @@ public class SecretaryController extends javax.swing.JFrame {
                        
                             Patient patient = new Patient(title, forename, surname, address, dateOfBirth, contactNumber, healthPlan,appointments);
                             
-                            Queries.addPatient(patient);
+                            queries.addPatient(patient);
                             
                             JOptionPane.showMessageDialog(null, "Data Submitted");
                             newPatientPanel.clearAll();
-                        }catch(NumberFormatException | NullPointerException el) {
+                        }catch(NumberFormatException | NullPointerException |SQLException el) {
                             JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -450,11 +456,11 @@ public class SecretaryController extends javax.swing.JFrame {
                             
                             Patient updatePatient = new Patient(patientID,title, forename, surname, address, dateOfBirth, contactNumber, healthPlan,appointments);
                             
-                            Queries.addPatient(updatePatient);
+                            queries.addPatient(updatePatient);
                             
                             JOptionPane.showMessageDialog(null, "Data Submitted");
                             newPatientPanel.clearAll();
-                        }catch(NumberFormatException | ArrayIndexOutOfBoundsException |NullPointerException el) {
+                        }catch(NumberFormatException | ArrayIndexOutOfBoundsException |NullPointerException|SQLException el) {
                             JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -488,15 +494,15 @@ public class SecretaryController extends javax.swing.JFrame {
                         String postCode = bookAppointmentSearchPanel.getPostCode();
                         
                         
-                        Patient[] patients = Queries.getPatients(dateOfBirth, houseNumber, postCode);
-                        cancelAppointmentForm.updatePatientNames(patients);
+                        Patient[] patients = queries.getPatients(dateOfBirth, houseNumber, postCode);     
+                        bookAppointmentForm.updatePatientNames(patients);
                         
-                        JOptionPane.showMessageDialog(null, "View results on patient dropbox","Search complete", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Check dropbox box","Search complete", JOptionPane.INFORMATION_MESSAGE);
                         
                     }catch(NumberFormatException | ArrayIndexOutOfBoundsException el) {
                         JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
                     }catch(java.lang.NullPointerException el) {
-                            JOptionPane.showMessageDialog(null, "No Results Found","Search", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, " No Results Found","Search", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
                 
@@ -509,8 +515,8 @@ public class SecretaryController extends javax.swing.JFrame {
                         String postCode = editPatientSearchPanel.getPostCode();
                         
     
-                        Patient[] patients = Queries.getPatients(dateOfBirth, houseNumber, postCode);
-                        cancelAppointmentForm.updatePatientNames(patients);
+                        Patient[] patients = queries.getPatients(dateOfBirth, houseNumber, postCode);
+                        editPatientLowerPanel.updatePatientNames(patients);
                         
                         
                     }catch(NumberFormatException | ArrayIndexOutOfBoundsException el) {
@@ -530,7 +536,7 @@ public class SecretaryController extends javax.swing.JFrame {
                         String postCode = cancelAppointmentSearchPanel.getPostCode();
                         
 
-                        Patient[] patients = Queries.getPatients(dateOfBirth, houseNumber, postCode);
+                        Patient[] patients = queries.getPatients(dateOfBirth, houseNumber, postCode);
                         cancelAppointmentForm.updatePatientNames(patients);
                         
                         
@@ -549,8 +555,8 @@ public class SecretaryController extends javax.swing.JFrame {
                         int houseNumber = receiptSearchPanel.getHouseNumber();
                         String postCode = receiptSearchPanel.getPostCode();
                         
-                        Patient[] patients = Queries.getPatients(dateOfBirth, houseNumber, postCode);
-                        cancelAppointmentForm.updatePatientNames(patients);
+                        Patient[] patients = queries.getPatients(dateOfBirth, houseNumber, postCode);
+                        receiptPanelLower.updatePatientNames(patients);
                         
                         
                     }catch(NumberFormatException el) {
@@ -573,15 +579,13 @@ public class SecretaryController extends javax.swing.JFrame {
                         int patientID = patient.getiD();
                         Appointment appointment =  new Appointment(treatments,Partner.valueOf(partner),patientID,date,startTime,endTime);
                         
-                        Queries.addAppointment(appointment);
+                        queries.addAppointment(appointment);
                         JOptionPane.showMessageDialog(null, "Appointment is booked");
                         
                         bookAppointmentForm.clearAll();
-                    }catch(java.lang.NullPointerException | ArrayIndexOutOfBoundsException el ) {
+                    }catch(java.lang.NullPointerException | ArrayIndexOutOfBoundsException | SQLException | IncorrectInputException el) {
                         JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
-                    } catch (IncorrectInputException ex) {
-                       JOptionPane.showMessageDialog(null, "Incorrect Input  - Try again","Error", JOptionPane.ERROR_MESSAGE);
-                   }
+                    }
                     
 
                 });
@@ -592,9 +596,9 @@ public class SecretaryController extends javax.swing.JFrame {
                 dentistCalendar.addChangeWeekListener((ActionEvent e) -> {
                     try {
                         // Get list of appointments for both Dentist and Hygienist
-                        currentWeek.minusDays(7);
-                        dentistCalendar.addAppointmentArray(Queries.getAppointments(Partner.DENTIST,currentWeek));
-                        hygienistCalendar.addAppointmentArray(Queries.getAppointments(Partner.HYGIENIST,currentWeek));  
+                        currentWeek = currentWeek.minusDays(7);
+                        dentistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.DENTIST,currentWeek));
+                        hygienistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.HYGIENIST,currentWeek));  
                         
                     } catch (IncorrectInputException ex) {
                         Logger.getLogger(SecretaryController.class.getName()).log(Level.SEVERE, null, ex);
@@ -602,9 +606,9 @@ public class SecretaryController extends javax.swing.JFrame {
                 }, (ActionEvent e) -> {
                     try {
                         // Get list of appointments for Dentist with changed week
-                        currentWeek.plusDays(7);
-                        dentistCalendar.addAppointmentArray(Queries.getAppointments(Partner.DENTIST,currentWeek));
-                        hygienistCalendar.addAppointmentArray(Queries.getAppointments(Partner.HYGIENIST,currentWeek));
+                        currentWeek = currentWeek.plusWeeks(1);
+                        dentistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.DENTIST,currentWeek));
+                        hygienistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.HYGIENIST,currentWeek));
                         
                     } catch (IncorrectInputException ex) {
                         Logger.getLogger(SecretaryController.class.getName()).log(Level.SEVERE, null, ex);
@@ -617,9 +621,9 @@ public class SecretaryController extends javax.swing.JFrame {
                 
                 hygienistCalendar.addChangeWeekListener((ActionEvent e) -> {
                     try {
-                        currentWeek.minusDays(7); 
-                        dentistCalendar.addAppointmentArray(Queries.getAppointments(Partner.DENTIST, currentWeek));
-                        hygienistCalendar.addAppointmentArray(Queries.getAppointments(Partner.HYGIENIST, currentWeek));
+                        currentWeek = currentWeek.minusDays(7); 
+                        dentistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.DENTIST, currentWeek));
+                        hygienistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.HYGIENIST, currentWeek));
                     
                      
                     }catch(NumberFormatException | NullPointerException el) {
@@ -631,9 +635,9 @@ public class SecretaryController extends javax.swing.JFrame {
                 }, (ActionEvent e) -> {
                     try {
                         
-                    currentWeek.plusDays(7);
-                    dentistCalendar.addAppointmentArray(Queries.getAppointments(Partner.DENTIST, currentWeek));
-                    hygienistCalendar.addAppointmentArray(Queries.getAppointments(Partner.HYGIENIST, currentWeek));
+                    currentWeek = currentWeek.plusDays(7);
+                    dentistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.DENTIST, currentWeek));
+                    hygienistCalendar.addAppointmentArray(queries.getAppointmentsbyWeek(Partner.HYGIENIST, currentWeek));
                     
                      
                     }catch(NumberFormatException | NullPointerException el) {
@@ -655,7 +659,7 @@ public class SecretaryController extends javax.swing.JFrame {
                         Appointment appointment = cancelAppointmentForm.getAppointmentComboBox();
                        
                         
-                        Queries.deleteAppointment(appointment);                  
+                        queries.deleteAppointment(appointment);                  
                      JOptionPane.showMessageDialog(null, "Appointment Cancelled");
                      
                     }catch(NumberFormatException | NullPointerException el) {
@@ -670,7 +674,7 @@ public class SecretaryController extends javax.swing.JFrame {
                 receiptPanelLower.addPaidActionListener((ActionEvent e) -> {
                     try {
                             
-                        //Queries.setTreatmentPaid();
+                        //queries.setTreatmentPaid();
                         
                    
                      JOptionPane.showMessageDialog(null, "Treatments have been marked as Paid");
