@@ -457,7 +457,7 @@ public class SecretaryController extends javax.swing.JFrame {
                             
                             Patient updatePatient = new Patient(patientID,title, forename, surname, address, dateOfBirth, contactNumber, healthPlan,appointments,healthPlanStartDate);
                             
-                            queries.addPatient(updatePatient);
+                            queries.editPatient(updatePatient);
                             
                             JOptionPane.showMessageDialog(null, "Data Submitted");
                             newPatientPanel.clearAll();

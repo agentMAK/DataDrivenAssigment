@@ -111,7 +111,7 @@ public class Queries {
             pst.setString(3,a.getDistrict());
             pst.setString(4,a.getCity());
             pst.setString(5,a.getPostCode());
-            pst.executeUpdate();
+            pst.execute();
             pst2 = con.prepareStatement("SELECT last_insert_id()");
             rs = pst2.executeQuery();
             rs.next();
@@ -305,17 +305,17 @@ public class Queries {
         try {
             
             con = DriverManager.getConnection(url, user, password);
-            pst = con.prepareStatement("SELECT * FROM Appointments WHERE  WHERE partner = (?) AND Appointments.date =(?)");
+            pst = con.prepareStatement("SELECT * FROM Appointments WHERE partner = (?) AND Appointments.date =(?)");
             pst.setString(1, p.toString());
-            pst.setString(2, currentDay.toString());
+            pst.setString(2, currentDay.format(formatterDate));
             rs = pst.executeQuery();
            
             while (rs.next()) {
                 LocalDate date = LocalDate.parse(rs.getString("date"));
                 LocalTime starttime = LocalTime.parse(rs.getString("starttime"));
                 LocalTime endtime = LocalTime.parse(rs.getString("endtime"));
-                int patientID = rs.getInt("patientID");
-                Partner partner = Partner.valueOf(rs.getString("partner"));
+                int patientID = rs.getInt("patient");
+                Partner partner = Partner.valueOf(rs.getString("partner").toUpperCase());
                 Boolean b = rs.getBoolean("iscomplete");
                 Appointment appointment = null;
                 try {
@@ -805,5 +805,39 @@ public class Queries {
         return (title+" "+forename+" "+surname);
         }
     }
-        
+    public void editPatient(Patient p) throws SQLException{
+
+        Connection con = null;
+        PreparedStatement pst = null;
+
+        try {
+
+            
+            con = DriverManager.getConnection(url, user, password);
+
+            pst = con.prepareStatement("UPDATE patients set forename = (?), surname = (?), title =(?), dob =(?), phone = (?), healthplan = (?), healthPlanStartDate = (?) WHERE idpatients = (?); ");
+            pst.setString(1, p.getForename());
+            pst.setString(2,p.getSurname());
+            pst.setString(3,p.getTitle());
+            pst.setString(4, p.getDateOfBirth().format(formatterDate));
+            pst.setString(5,Integer.toString(p.getContactNumber()));
+            pst.setString(6,p.getPlan().getName());
+            pst.setString(7,p.getHealthPlanStartDate().format(formatterDate));
+            pst.setString(8,Integer.toString(p.getiD()));
+            //pst.setString(6,"false");
+            pst.executeUpdate();
+
+
+        } finally {
+
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+        }
+
+    }  
 }

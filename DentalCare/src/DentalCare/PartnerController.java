@@ -36,12 +36,18 @@ public class PartnerController extends javax.swing.JFrame {
     public PartnerController() {
         initComponents();
         queries = new Queries("jdbc:mysql://localhost:3306/mydb","root","1234");
-        combine();
         addDentistCalendarPanelListener();
         addHygienistCalendarPanelListener();
         addDentistTreatmentPanelListener();
         addHygienistTreatmentPanelListener();
         addSearchPanelListener();
+        try {
+            currentDay  = LocalDate.now();
+            dentistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.DENTIST, currentDay)));
+            hygienistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay)));
+        } catch (IncorrectInputException ex) {
+            Logger.getLogger(PartnerController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -127,7 +133,7 @@ public class PartnerController extends javax.swing.JFrame {
                 hygienistPanelStateChanged(evt);
             }
         });
-        hygienistPanel.addTab("tab2", hygienistCalendar);
+        hygienistPanel.addTab("Calendar", hygienistCalendar);
 
         addTreatmentHygienistMain.setLayout(new java.awt.BorderLayout());
 
@@ -171,7 +177,13 @@ public class PartnerController extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mainTabbedPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_mainTabbedPanelStateChanged
-        currentDay  = LocalDateTime.now();
+        //try {
+            currentDay  = LocalDate.now();
+            //dentistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.DENTIST, currentDay)));
+            //hygienistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay)));
+        //} catch (IncorrectInputException ex) {
+        //    Logger.getLogger(PartnerController.class.getName()).log(Level.SEVERE, null, ex);
+        //}
     }//GEN-LAST:event_mainTabbedPanelStateChanged
 
     private void hygienistPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_hygienistPanelStateChanged
@@ -237,7 +249,7 @@ public class PartnerController extends javax.swing.JFrame {
     private DentalCare.views.SearchPatientPanel searchPatientDentist;
     private DentalCare.views.SearchPatientPanel searchPatientHygienist;
     // End of variables declaration//GEN-END:variables
-    private LocalDateTime currentDay;
+    private LocalDate currentDay;
     
     
     //Listener for all panels
@@ -247,8 +259,8 @@ public class PartnerController extends javax.swing.JFrame {
                 dentistCalendar.addChangeDayListener((ActionEvent e) -> {
                     
                     try {
-                        currentDay.minusDays(1);
-                        dentistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.DENTIST, currentDay.toLocalDate())));
+                        currentDay = currentDay.minusDays(1);
+                        dentistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.DENTIST, currentDay)));
                     } catch (IncorrectInputException ex) {
                         Logger.getLogger(PartnerController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -256,8 +268,8 @@ public class PartnerController extends javax.swing.JFrame {
                     try {
                         // Get list of appointments for Dentist with changed week
                         //dentistCalendar.addAppointmentArray(dentistAppointments)
-                        currentDay.plusDays(1);
-                        dentistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.DENTIST, currentDay.toLocalDate())));
+                        currentDay = currentDay.plusDays(1);
+                        dentistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.DENTIST, currentDay)));
                     } catch (IncorrectInputException ex) {
                         Logger.getLogger(PartnerController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -270,8 +282,8 @@ public class PartnerController extends javax.swing.JFrame {
                 hygienistCalendar.addChangeDayListener((ActionEvent e) -> {
                     
                     try {
-                        currentDay.minusDays(1);
-                        hygienistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay.toLocalDate())));
+                        currentDay = currentDay.minusDays(1);
+                        hygienistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay)));
                     } catch (IncorrectInputException ex) {
                         
                     }
@@ -279,8 +291,8 @@ public class PartnerController extends javax.swing.JFrame {
                     try {
                         // Get list of appointments for Dentist with changed week
                         //dentistCalendar.addAppointmentArray(dentistAppointments)
-                        currentDay.plusDays(1);
-                        hygienistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay.toLocalDate())));
+                        currentDay = currentDay.plusDays(1);
+                        hygienistCalendar.addAppointmentArray((queries.getAppointmentsbyDay(Partner.HYGIENIST, currentDay)));
                     } catch (IncorrectInputException ex) {
                     }
                 });

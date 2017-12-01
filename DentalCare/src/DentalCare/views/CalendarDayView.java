@@ -7,6 +7,7 @@ package DentalCare.views;
  */
 import java.awt.event.ActionListener;
 import DentalCare.model.Appointment;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 /**
@@ -19,7 +20,7 @@ public class CalendarDayView extends javax.swing.JPanel {
      * Creates new form calendarPanel
      */
     public CalendarDayView() {
-        initComponents();
+        initComponents();;
     }
 
     /**
@@ -126,6 +127,8 @@ public class CalendarDayView extends javax.swing.JPanel {
 
     public void addAppointmentArray(Appointment[] appointments) {
         
+        clearAll();
+        
         for(Appointment app : appointments) {
             javax.swing.JPanel appointment = new javax.swing.JPanel();
             javax.swing.JLabel time =  new javax.swing.JLabel();
@@ -139,8 +142,9 @@ public class CalendarDayView extends javax.swing.JPanel {
             appointment.setPreferredSize(new java.awt.Dimension(600, 100));
             appointment.setLayout(new java.awt.BorderLayout());
 
-            String startTime = app.getStartTime().toString().substring(11);
-            String endTime = app.getEndTime().toString().substring(11);
+            DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+            String startTime = app.getStartTime().format(formatterTime);
+            String endTime = app.getEndTime().format(formatterTime);
             
             time.setText(startTime+" - "+endTime);
             time.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 7, 1, 1));
@@ -149,7 +153,7 @@ public class CalendarDayView extends javax.swing.JPanel {
             patientPanel.setBackground(new java.awt.Color(237, 250, 250));
             patientPanel.setLayout(new java.awt.BorderLayout());
 
-            //patient.setText(app.getFullName());
+            patient.setText(app.getFullName());
             patient.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 7, 1, 1));
             patientPanel.add(patient, java.awt.BorderLayout.PAGE_START);
 
@@ -173,6 +177,9 @@ public class CalendarDayView extends javax.swing.JPanel {
         nextWeek.addActionListener(next);
     }
    
+    public void clearAll() {
+        dayPanel.removeAll();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel appointment;
     private javax.swing.JPanel calendar2;
