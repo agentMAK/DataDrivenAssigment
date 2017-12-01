@@ -839,5 +839,60 @@ public class Queries {
                 }
         }
 
-    }  
+
+    }
+    public Appointment[] getAppointmentsbyPatient(Patient p) throws IncorrectInputException {
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+        try {
+            
+            con = DriverManager.getConnection(url, user, password);
+            pst = con.prepareStatement("SELECT * FROM Appointments WHERE idpatient = (?)");
+            pst.setString(1, p.toString());
+            rs = pst.executeQuery();
+           
+            while (rs.next()) {
+                
+                LocalDate date = rs.getDate("date").toLocalDate();
+                LocalTime startTime = rs.getTime("startTime").toLocalTime();
+                LocalTime endTime = rs.getTime("endTime").toLocalTime();
+                Appointment tempAppointment = new Appointment(null,Partner.valueOf(rs.getString("partner")),p.getiD(),date,startTime,endTime);
+                Treatment[] treatments = getTreatments(tempAppointment);
+                Appointment newAppointment = new Appointment(treatments,Partner.valueOf(rs.getString("partner")),p.getiD(),date,startTime,endTime);
+               appointments.add(newAppointment);
+            }
+
+        } catch (SQLException ex) {
+            
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
+
+        } finally {
+
+            try {
+            
+                if (rs != null) {
+                    rs.close();
+                }
+                
+                if (pst != null) {
+                    pst.close();
+                }
+                
+                if (con != null) {
+                    con.close();
+                }
+
+            } catch (SQLException ex) {
+                
+                Logger lgr = Logger.getLogger(Queries.class.getName());
+                lgr.log(Level.SEVERE, ex.getMessage(), ex);
+            }
+        }
+        return appointments.toArray(new Appointment[appointments.size()]);
+    }
 }
+
