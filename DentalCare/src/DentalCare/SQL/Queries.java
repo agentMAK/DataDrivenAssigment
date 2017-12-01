@@ -65,7 +65,7 @@ public class Queries {
 
             con = DriverManager.getConnection(url, user, password);
             
-            pst = con.prepareStatement("INSERT INTO Patients(forename,surname,phone,title,dob,address,healthplan,healthPlanStartDate) VALUES(?,?,?,?,?,?)");
+            pst = con.prepareStatement("INSERT INTO Patients(forename,surname,title,phone,dob,address,healthplan,healthPlanStartDate) VALUES(?,?,?,?,?,?,?,?)");
             pst.setString(1, p.getForename());
             pst.setString(2, p.getSurname());
             pst.setString(3, p.getTitle());
@@ -73,8 +73,12 @@ public class Queries {
             String dob = p.getDateOfBirth().format(formatterDate);
             pst.setString(5, dob);
             pst.setString(6, Integer.toString(addressID));
-            pst.setString(7, p.getPlan().getName());
-            pst.setString(7, LocalDate.now().format(formatterDate));
+            if(p.getPlan() != null) {
+                pst.setString(7, p.getPlan().getName());
+            }else {
+                pst.setString(7, "");
+                pst.setString(8, LocalDate.now().format(formatterDate));
+            }
             
             
             pst.executeUpdate();
@@ -523,8 +527,7 @@ public class Queries {
             rs = pst.executeQuery();
             
             while (rs.next()) {
-                LocalDate startDate = rs.getDate("startDate").toLocalDate();
-                healthplan = new HealthCarePlan(rs.getString("namehealthplan"),startDate,rs.getInt("hygieneVisits"),rs.getInt("checkupVisits"),rs.getInt("repairVisits"),rs.getInt("cost"));
+                healthplan = new HealthCarePlan(rs.getString("namehealthplan"),rs.getInt("hygieneVisits"),rs.getInt("checkupVisits"),rs.getInt("repairVisits"),rs.getInt("cost"));
             }
 
         } catch (SQLException ex) {
